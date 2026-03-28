@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Once Upon a Time: The Orange Story</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --orange: #F97316;
+    --orange-light: #FED7AA;
+    --orange-pale: #FFF7ED;
+    --deep: #1C0A00;
+    --warm-dark: #3B1B08;
+    --text: #3B1B08;
+    --muted: #92400E;
+    --white: #FFFAF5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--white);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse at 10% 20%, rgba(249,115,22,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(249,115,22,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.2;
+    color: var(--deep);
+    margin-bottom: 20px;
+  }
+
+  .header h1 em { font-style: italic; color: var(--orange); }
+
+  .header-sub {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .orange-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px auto;
+    justify-content: center;
+  }
+
+  .orange-divider span { font-size: 20px; }
+  .orange-divider::before { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--orange-light)); }
+  .orange-divider::after { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, var(--orange-light), transparent); }
+
+  .part { margin-bottom: 8px; animation: fadeUp 0.6s ease both; }
+
+  .part-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  .part-label::after { content: ''; width: 32px; height: 1px; background: var(--orange); opacity: 0.4; }
+
+  .part-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--warm-dark);
+    margin-bottom: 20px;
+    padding-left: 2px;
+  }
+
+  .episode { position: relative; margin-bottom: 12px; }
+
+  .episode-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--white);
+    border: 1px solid rgba(249,115,22,0.15);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+  }
+
+  .episode-card:hover {
+    border-color: rgba(249,115,22,0.45);
+    background: var(--orange-pale);
+    transform: translateX(4px);
+    box-shadow: -4px 0 0 var(--orange), 0 4px 20px rgba(249,115,22,0.08);
+  }
+
+  .ep-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--orange-light);
+    color: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 2px;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+
+  .episode-card:hover .ep-num { background: var(--orange); color: white; }
+
+  .ep-content { flex: 1; min-width: 0; }
+
+  .ep-title { font-size: 17px; font-weight: 500; line-height: 1.45; color: var(--text); }
+  .ep-note { color: var(--muted); font-weight: 300; font-size: 12px; }
+
+  .ep-arrow {
+    flex-shrink: 0;
+    color: var(--orange-light);
+    font-size: 16px;
+    margin-top: 6px;
+    transition: all 0.25s ease;
+  }
+
+  .episode-card:hover .ep-arrow { color: var(--orange); transform: translateX(3px); }
+
+  .part-spacer {
+    margin: 32px 0 24px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--orange-light) 0%, transparent 100%);
+    opacity: 0.5;
+  }
+
+  .finale {
+    margin-top: 40px;
+    padding: 32px 28px;
+    background: linear-gradient(135deg, var(--deep) 0%, var(--warm-dark) 100%);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .finale:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(249,115,22,0.2); }
+
+  .finale::before {
+    content: '🍊';
+    position: absolute;
+    right: -10px; top: -10px;
+    font-size: 80px;
+    opacity: 0.08;
+    transform: rotate(-20deg);
+    pointer-events: none;
+  }
+
+  .finale-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+
+  .finale h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--orange-light);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .finale p { color: rgba(254,215,170,0.7); font-size: 13px; line-height: 1.7; }
+
+  .finale-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--orange-pale);
+    font-size: 13px;
+    padding: 10px 18px;
+    background: rgba(249,115,22,0.18);
+    border-radius: 8px;
+    margin-top: 14px;
+    border: 1px solid rgba(249,115,22,0.25);
+    transition: all 0.25s ease;
+    pointer-events: none;
+  }
+
+  .finale:hover .finale-btn { background: rgba(249,115,22,0.32); border-color: rgba(249,115,22,0.5); }
+
+  .coda {
+    margin-top: 48px;
+    padding: 28px;
+    border-left: 3px solid var(--orange-light);
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .coda p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header">
+    <div class="header-eyebrow">A Substack Story in 12 Episodes</div>
+    <h1>Once Upon a Time,<br>There Was a <em>Woman with a Dream</em></h1>
+    <div class="orange-divider"><span>🍊</span></div>
+    <p class="header-sub">A dream to use AI to capture the vision in her brain.<br>Here is the story of what happened next.</p>
+  </header>
+
+  <div class="part">
+    <div class="part-label">Part 1</div>
+    <div class="part-title">The Beginning</div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/profile/118913109-alyssa-fu-ward-phd/note/c-215956129?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 1</div>
+        <div class="ep-content"><div class="ep-title">@Dallas Payne's AI doesn't know how to make a human with waves</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@alyssafuward/note/c-216021453?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 2</div>
+        <div class="ep-content"><div class="ep-title">Magic Maker Dallas turns a confused human into a dolphin <span class="ep-note">(click through the restacks)</span></div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/profile/118913109-alyssa-fu-ward-phd/note/c-224215115?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 3</div>
+        <div class="ep-content"><div class="ep-title">Dallas and Alyssa make a solemn agreement not to make mediocre creations</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="part-spacer"></div>
+
+  <div class="part">
+    <div class="part-label">Part 2</div>
+    <div class="part-title">The High Fashion Orange Dress</div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@alyssafuward/note/c-224988197','_blank')">
+        <div class="ep-num">Ep 4</div>
+        <div class="ep-content"><div class="ep-title">A high fashion orange dress by @AI Meets Girlboss sparks a new idea</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@daringnext/note/c-224997336?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 5</div>
+        <div class="ep-content"><div class="ep-title">Dallas delivers oranges transformed into butterflies</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@daringnext/note/c-225009734?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 6</div>
+        <div class="ep-content"><div class="ep-title">Dallas puts a new meaning into a high fashion splash</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="part-spacer"></div>
+
+  <div class="part">
+    <div class="part-label">Part 3</div>
+    <div class="part-title">Octopus Arms</div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/profile/22680238-kim-doyal/note/c-225911089?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 7</div>
+        <div class="ep-content"><div class="ep-title">You can't mention octopus arms without also mentioning Dallas</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@daringnext/note/c-225988394?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 8</div>
+        <div class="ep-content"><div class="ep-title">Dallas sprinkles transformation pixie dust wherever she goes</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="part-spacer"></div>
+
+  <div class="part">
+    <div class="part-label">Part 4</div>
+    <div class="part-title">Dallas and Natalie Are Up to Something…</div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@daringnext/note/c-226511802?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 9</div>
+        <div class="ep-content"><div class="ep-title">Dallas did something new…</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@crankthatnat/note/c-226998524?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 10</div>
+        <div class="ep-content"><div class="ep-title">Natalie stirs up the anticipation…</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="episode">
+      <div class="episode-card" onclick="window.open('https://substack.com/@crankthatnat/note/c-228636558?r=1yspxx','_blank')">
+        <div class="ep-num">Ep 11</div>
+        <div class="ep-content"><div class="ep-title">Alyssa feels so much FOMO!</div></div>
+        <div class="ep-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finale" onclick="window.open('https://substack.com/@daringnext/note/c-234364473?r=1yspxx','_blank')">
+    <div class="finale-eyebrow">Season Finale · Episode 12</div>
+    <h3>The Orange and the Beach</h3>
+    <p>And there you have it, folks — the full story of how a simple animation slip can spark a story that travels miles around this little world we've created called @Substack.</p>
+    <div class="finale-btn">🍊 Read the finale →</div>
+  </div>
+
+  <div class="coda">
+    <p>"How a simple animation slip can spark a story that travels miles around this little world we've created."</p>
+  </div>
+
+</div>
+</body>
+</html>
