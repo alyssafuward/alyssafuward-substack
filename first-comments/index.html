@@ -60,7 +60,14 @@
   }
   .mode-btn:hover { border-color: #E07A10; color: #E07A10; }
   .mode-btn.active { background: #fff5ec; border-color: #E07A10; color: #E07A10; }
-  .pin-label { font-size: 9px; fill: #aaa; pointer-events: none; }
+  .all-tip {
+    position: fixed; pointer-events: none;
+    background: white; border: 1px solid #e8e8e8; border-radius: 8px;
+    padding: 7px 11px; box-shadow: 0 4px 14px rgba(0,0,0,.09);
+    font-size: 11px; line-height: 1.5; max-width: 180px; z-index: 50;
+  }
+  .all-tip .tip-name { font-weight: 600; color: #111; margin-bottom: 2px; font-size: 11px; }
+  .all-tip .tip-quote { color: #666; font-style: italic; border-left: 2px solid #f0c090; padding-left: 6px; font-size: 10.5px; }
   #nav-toggle {
     display: inline-block; margin-left: 10px;
     font-size: 11px; color: #bbb; cursor: pointer;
@@ -116,7 +123,7 @@
   All data and accounts shown were publicly shared on Substack.
   <a href="https://substack.com/@alyssafuward" target="_blank">Message Alyssa</a> if you would like your information to be removed.
   <div style="margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px;display:flex;flex-direction:column;gap:6px;">
-    <button id="toggle-labels" class="mode-btn">Show all names</button>
+    <button id="toggle-labels" class="mode-btn">Show all comments</button>
     <button id="toggle-ridic" class="mode-btn">Ridiculous mode 🎉</button>
   </div>
 </div>
@@ -148,11 +155,37 @@ function naturalStem(handle, subCount) {
 const tip = d3.select("#tooltip");
 const svg = d3.select("#chart").style("overflow","visible");
 
-let labelsOn = false, ridicOn = false, ridicTimer = null;
+let allTipsOn = false, ridicOn = false, ridicTimer = null;
+let allTipEls = [];
 
-function setLabels(on) {
-  labelsOn = on;
-  svg.selectAll(".pin-label").style("display", on ? null : "none");
+function clearAllTipEls() {
+  allTipEls.forEach(el => el.remove());
+  allTipEls = [];
+}
+
+function showAllTips() {
+  clearAllTipEls();
+  const svgRect = svg.node().getBoundingClientRect();
+  svg.selectAll(".pin-group").each(function(nd) {
+    if (!nd) return;
+    const screenX = svgRect.left + nd.tx;
+    const screenY = svgRect.top + 16 + nd.ty + nd.headY;
+    const preview = nd.d.first_comment_text
+      ? nd.d.first_comment_text.slice(0, 90) + (nd.d.first_comment_text.length > 90 ? '…' : '')
+      : '';
+    const div = document.createElement('div');
+    div.className = 'all-tip';
+    div.innerHTML = `<div class="tip-name">${nd.d.name}</div>${preview ? `<div class="tip-quote">"${preview}"</div>` : ''}`;
+    div.style.left = (screenX + nd.r + 6) + 'px';
+    div.style.top  = (screenY - 24) + 'px';
+    document.body.appendChild(div);
+    allTipEls.push(div);
+  });
+}
+
+function hideAllTips() {
+  clearAllTipEls();
+  allTipsOn = false;
 }
 
 function startRidiculous() {
@@ -167,7 +200,6 @@ function startRidiculous() {
       d3.select(this).select(".pin-stem").attr("y2", nd.headY + off);
       d3.select(this).select(".pin-head").attr("cy",  nd.headY + off);
       d3.select(this).select(".pin-hit").attr("cy",   nd.headY + off);
-      d3.select(this).select(".pin-label").attr("y",  nd.headY + off);
     });
   });
 }
@@ -179,7 +211,6 @@ function stopRidiculous() {
     d3.select(this).select(".pin-stem").attr("y2", nd.headY);
     d3.select(this).select(".pin-head").attr("cy",  nd.headY);
     d3.select(this).select(".pin-hit").attr("cy",   nd.headY);
-    d3.select(this).select(".pin-label").attr("y",  nd.headY);
   });
 }
 
@@ -300,11 +331,6 @@ function draw() {
         window.open(url, "_blank");
       });
 
-    grp.append("text").attr("class","pin-label")
-      .attr("x", r + 4).attr("y", headY).attr("dominant-baseline","middle")
-      .style("display","none")
-      .text(d.name);
-
     grp.append("circle").attr("class","pin-hit")
       .attr("cx",0).attr("cy",headY).attr("r",r).attr("fill","transparent")
       .on("mouseenter", function() {
@@ -344,7 +370,7 @@ function draw() {
       });
   });
 
-  if (labelsOn) setLabels(true);
+  if (allTipsOn) showAllTips();
   if (ridicOn) startRidiculous();
 }
 
@@ -364,9 +390,10 @@ draw();
 
   document.getElementById('toggle-labels').addEventListener('click', function(e) {
     e.stopPropagation();
-    setLabels(!labelsOn);
-    this.classList.toggle('active', labelsOn);
-    this.textContent = labelsOn ? 'Hide names' : 'Show all names';
+    allTipsOn = !allTipsOn;
+    allTipsOn ? showAllTips() : hideAllTips();
+    this.classList.toggle('active', allTipsOn);
+    this.textContent = allTipsOn ? 'Hide all comments' : 'Show all comments';
   });
 
   document.getElementById('toggle-ridic').addEventListener('click', function(e) {
