@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Subscriber Growth — alyssafuward.substack.com</title>
+<title>Top Commenters — alyssafuward.substack.com</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #fff; padding: 16px 32px 0; }
@@ -31,6 +31,7 @@
   #tooltip .tip-detail { color: #999; font-size: 11.5px; }
   #tooltip .tip-link { color: #E07A10; font-size: 11px; margin-top: 5px; }
   .watermark { font-size: 10px; fill: #ddd; font-style: italic; }
+  .axis-label { font-size: 10px; fill: #ccc; letter-spacing: 0.06em; text-transform: uppercase; }
   #tooltip .tip-quote { color: #555; font-size: 11.5px; font-style: italic; border-left: 2px solid #f0c090; padding-left: 8px; margin: 4px 0 6px; line-height: 1.5; }
 
   #info-btn {
@@ -84,7 +85,7 @@
 </style>
 </head>
 <body>
-<h2>Subscriber growth · <a href="https://alyssafuward.substack.com" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #ddd;">alyssafuward.substack.com</a><span id="info-btn" title="About this data">ⓘ</span><button id="nav-toggle">all commenters ▾</button></h2>
+<h2>Top Commenters · <a href="https://alyssafuward.substack.com" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #ddd;">alyssafuward.substack.com</a><span id="info-btn" title="About this data">ⓘ</span><button id="nav-toggle">all commenters ▾</button></h2>
 <div class="cards">
   <div class="card">
     <div class="label">Total subscribers</div>
@@ -177,6 +178,10 @@ function draw() {
       a.select(".domain").remove();
       a.selectAll("text").attr("x", 4).attr("text-anchor","start").attr("dy","-0.3em");
     });
+
+  g.append("text").attr("class","axis-label")
+    .attr("x", 4).attr("y", -6).attr("text-anchor","start")
+    .text("subscribers");
 
   g.append("a").attr("href","https://alyssafuward.substack.com").attr("target","_blank").style("cursor","pointer")
     .append("text").attr("class","watermark")
