@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Subscriber Growth — alyssafuward.substack.com</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #fff; padding: 16px 32px 0; }
+  h2 { font-size: 13px; color: #999; font-weight: 500; margin-bottom: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .cards { display: flex; gap: 16px; margin-bottom: 8px; }
+  .card { flex: 1; border: 1px solid #e8e8e8; border-radius: 12px; padding: 20px 24px; position: relative; }
+  .card .label { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .card .value { font-size: 34px; font-weight: 700; color: #111; }
+  .card .from  { font-size: 12px; color: #bbb; margin-top: 6px; }
+  .card .badge { position: absolute; top: 18px; right: 18px; background: #eafaf2; color: #27ae60; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+  svg { display: block; width: 100%; overflow: visible; }
+  .area { fill: url(#areaGrad); }
+  .line { fill: none; stroke: #E07A10; stroke-width: 2px; }
+  .axis text { font-size: 11px; fill: #bbb; }
+  .axis .domain { display: none; }
+  .gridline { stroke: #f0f0f0; }
+  .pin-group { cursor: pointer; }
+  #tooltip {
+    position: fixed; pointer-events: none;
+    background: white; border: 1px solid #e8e8e8; border-radius: 10px;
+    padding: 11px 15px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    font-size: 13px; line-height: 1.65; opacity: 0; transition: opacity .08s;
+    max-width: 230px; z-index: 100;
+  }
+  #tooltip .tip-name { font-weight: 600; color: #111; margin-bottom: 2px; }
+  #tooltip .tip-detail { color: #999; font-size: 11.5px; }
+  #tooltip .tip-link { color: #E07A10; font-size: 11px; margin-top: 5px; }
+  .watermark { font-size: 10px; fill: #ddd; font-style: italic; }
+  #tooltip .tip-quote { color: #555; font-size: 11.5px; font-style: italic; border-left: 2px solid #f0c090; padding-left: 8px; margin: 4px 0 6px; line-height: 1.5; }
+
+  #info-btn {
+    display: inline-block; margin-left: 6px;
+    color: #ccc; font-size: 11px; cursor: pointer;
+    user-select: none; vertical-align: middle;
+    transition: color .15s;
+  }
+  #info-btn:hover { color: #E07A10; }
+  #info-popover {
+    position: fixed;
+    background: white; border: 1px solid #e8e8e8;
+    border-radius: 10px; padding: 12px 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.1);
+    font-size: 12px; color: #666; line-height: 1.6;
+    max-width: 260px; z-index: 200;
+    display: none;
+  }
+  #info-popover a { color: #E07A10; text-decoration: none; }
+  #info-popover a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<h2>Subscriber growth · <a href="https://alyssafuward.substack.com" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #ddd;">alyssafuward.substack.com</a><span id="info-btn" title="About this data">ⓘ</span></h2>
+<div class="cards">
+  <div class="card">
+    <div class="label">Total subscribers</div>
+    <div class="value">490</div>
+    <div class="from">From 111</div>
+    <div class="badge">↑ 341.4%</div>
+  </div>
+  <div class="card">
+    <div class="label">180d views</div>
+    <div class="value">15.4K</div>
+    <div class="from">From 3.28K</div>
+    <div class="badge">↑ 370.4%</div>
+  </div>
+</div>
+<svg id="chart"></svg>
+<div id="tooltip"></div>
+<div id="info-popover">
+  All data and accounts shown were publicly shared on Substack.
+  <a href="https://substack.com/@alyssafuward" target="_blank">Message Alyssa</a> if you would like your information to be removed.
+</div>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+const data = {"growth": [{"date": "2025-11-02", "count": 100}, {"date": "2025-11-03", "count": 100}, {"date": "2025-11-04", "count": 100}, {"date": "2025-11-05", "count": 100}, {"date": "2025-11-06", "count": 100}, {"date": "2025-11-07", "count": 100}, {"date": "2025-11-08", "count": 100}, {"date": "2025-11-09", "count": 100}, {"date": "2025-11-10", "count": 100}, {"date": "2025-11-11", "count": 100}, {"date": "2025-11-12", "count": 100}, {"date": "2025-11-13", "count": 101}, {"date": "2025-11-14", "count": 103}, {"date": "2025-11-15", "count": 105}, {"date": "2025-11-16", "count": 106}, {"date": "2025-11-17", "count": 109}, {"date": "2025-11-18", "count": 109}, {"date": "2025-11-19", "count": 109}, {"date": "2025-11-20", "count": 109}, {"date": "2025-11-21", "count": 109}, {"date": "2025-11-22", "count": 109}, {"date": "2025-11-23", "count": 109}, {"date": "2025-11-24", "count": 112}, {"date": "2025-11-25", "count": 112}, {"date": "2025-11-26", "count": 112}, {"date": "2025-11-27", "count": 114}, {"date": "2025-11-28", "count": 114}, {"date": "2025-11-29", "count": 115}, {"date": "2025-11-30", "count": 116}, {"date": "2025-12-01", "count": 118}, {"date": "2025-12-02", "count": 118}, {"date": "2025-12-03", "count": 119}, {"date": "2025-12-04", "count": 119}, {"date": "2025-12-05", "count": 120}, {"date": "2025-12-06", "count": 122}, {"date": "2025-12-07", "count": 122}, {"date": "2025-12-08", "count": 122}, {"date": "2025-12-09", "count": 122}, {"date": "2025-12-10", "count": 122}, {"date": "2025-12-11", "count": 122}, {"date": "2025-12-12", "count": 127}, {"date": "2025-12-13", "count": 128}, {"date": "2025-12-14", "count": 128}, {"date": "2025-12-15", "count": 128}, {"date": "2025-12-16", "count": 128}, {"date": "2025-12-17", "count": 128}, {"date": "2025-12-18", "count": 129}, {"date": "2025-12-19", "count": 130}, {"date": "2025-12-20", "count": 132}, {"date": "2025-12-21", "count": 136}, {"date": "2025-12-22", "count": 137}, {"date": "2025-12-23", "count": 144}, {"date": "2025-12-24", "count": 166}, {"date": "2025-12-25", "count": 172}, {"date": "2025-12-26", "count": 176}, {"date": "2025-12-27", "count": 178}, {"date": "2025-12-28", "count": 181}, {"date": "2025-12-29", "count": 184}, {"date": "2025-12-30", "count": 185}, {"date": "2025-12-31", "count": 185}, {"date": "2026-01-01", "count": 186}, {"date": "2026-01-02", "count": 186}, {"date": "2026-01-03", "count": 188}, {"date": "2026-01-04", "count": 189}, {"date": "2026-01-05", "count": 190}, {"date": "2026-01-06", "count": 192}, {"date": "2026-01-07", "count": 196}, {"date": "2026-01-08", "count": 199}, {"date": "2026-01-09", "count": 200}, {"date": "2026-01-10", "count": 202}, {"date": "2026-01-11", "count": 204}, {"date": "2026-01-12", "count": 208}, {"date": "2026-01-13", "count": 209}, {"date": "2026-01-14", "count": 214}, {"date": "2026-01-15", "count": 215}, {"date": "2026-01-16", "count": 215}, {"date": "2026-01-17", "count": 219}, {"date": "2026-01-18", "count": 225}, {"date": "2026-01-19", "count": 227}, {"date": "2026-01-20", "count": 227}, {"date": "2026-01-21", "count": 227}, {"date": "2026-01-22", "count": 227}, {"date": "2026-01-23", "count": 229}, {"date": "2026-01-24", "count": 229}, {"date": "2026-01-25", "count": 229}, {"date": "2026-01-26", "count": 230}, {"date": "2026-01-27", "count": 230}, {"date": "2026-01-28", "count": 236}, {"date": "2026-01-29", "count": 242}, {"date": "2026-01-30", "count": 243}, {"date": "2026-01-31", "count": 244}, {"date": "2026-02-01", "count": 246}, {"date": "2026-02-02", "count": 246}, {"date": "2026-02-03", "count": 246}, {"date": "2026-02-04", "count": 247}, {"date": "2026-02-05", "count": 248}, {"date": "2026-02-06", "count": 248}, {"date": "2026-02-07", "count": 248}, {"date": "2026-02-08", "count": 249}, {"date": "2026-02-09", "count": 250}, {"date": "2026-02-10", "count": 250}, {"date": "2026-02-11", "count": 252}, {"date": "2026-02-12", "count": 255}, {"date": "2026-02-13", "count": 258}, {"date": "2026-02-14", "count": 260}, {"date": "2026-02-15", "count": 261}, {"date": "2026-02-16", "count": 268}, {"date": "2026-02-17", "count": 270}, {"date": "2026-02-18", "count": 276}, {"date": "2026-02-19", "count": 280}, {"date": "2026-02-20", "count": 286}, {"date": "2026-02-21", "count": 287}, {"date": "2026-02-22", "count": 290}, {"date": "2026-02-23", "count": 296}, {"date": "2026-02-24", "count": 297}, {"date": "2026-02-25", "count": 298}, {"date": "2026-02-26", "count": 300}, {"date": "2026-02-27", "count": 300}, {"date": "2026-02-28", "count": 301}, {"date": "2026-03-01", "count": 302}, {"date": "2026-03-02", "count": 302}, {"date": "2026-03-03", "count": 305}, {"date": "2026-03-04", "count": 310}, {"date": "2026-03-05", "count": 310}, {"date": "2026-03-06", "count": 312}, {"date": "2026-03-07", "count": 320}, {"date": "2026-03-08", "count": 328}, {"date": "2026-03-09", "count": 334}, {"date": "2026-03-10", "count": 335}, {"date": "2026-03-11", "count": 338}, {"date": "2026-03-12", "count": 342}, {"date": "2026-03-13", "count": 344}, {"date": "2026-03-14", "count": 345}, {"date": "2026-03-15", "count": 347}, {"date": "2026-03-16", "count": 353}, {"date": "2026-03-17", "count": 359}, {"date": "2026-03-18", "count": 362}, {"date": "2026-03-19", "count": 365}, {"date": "2026-03-20", "count": 368}, {"date": "2026-03-21", "count": 370}, {"date": "2026-03-22", "count": 370}, {"date": "2026-03-23", "count": 373}, {"date": "2026-03-24", "count": 381}, {"date": "2026-03-25", "count": 393}, {"date": "2026-03-26", "count": 408}, {"date": "2026-03-27", "count": 412}, {"date": "2026-03-28", "count": 413}, {"date": "2026-03-29", "count": 414}, {"date": "2026-03-30", "count": 414}, {"date": "2026-03-31", "count": 417}, {"date": "2026-04-01", "count": 418}, {"date": "2026-04-02", "count": 421}, {"date": "2026-04-03", "count": 426}, {"date": "2026-04-04", "count": 430}, {"date": "2026-04-05", "count": 430}, {"date": "2026-04-06", "count": 430}, {"date": "2026-04-07", "count": 435}, {"date": "2026-04-08", "count": 437}, {"date": "2026-04-09", "count": 440}, {"date": "2026-04-10", "count": 444}, {"date": "2026-04-11", "count": 448}, {"date": "2026-04-12", "count": 449}, {"date": "2026-04-13", "count": 452}, {"date": "2026-04-14", "count": 452}, {"date": "2026-04-15", "count": 453}, {"date": "2026-04-16", "count": 454}, {"date": "2026-04-17", "count": 457}, {"date": "2026-04-18", "count": 459}, {"date": "2026-04-19", "count": 460}, {"date": "2026-04-20", "count": 462}, {"date": "2026-04-21", "count": 466}, {"date": "2026-04-22", "count": 468}, {"date": "2026-04-23", "count": 471}, {"date": "2026-04-24", "count": 476}, {"date": "2026-04-25", "count": 479}, {"date": "2026-04-26", "count": 479}, {"date": "2026-04-27", "count": 481}, {"date": "2026-04-28", "count": 483}, {"date": "2026-04-29", "count": 484}, {"date": "2026-04-30", "count": 489}], "commenters": [{"name": "Natalie Nicholson", "handle": "crankthatnat", "comments": 360, "first_comment": "2026-01-06", "sub_count": 192, "comment_url": "https://substack.com/@crankthatnat/note/c-196073953", "first_comment_text": "QUESTION FOR THE CLASS! \ud83d\ude4b\ud83c\udffc\u200d\u2640\ufe0f \n\nI\u2019m about a month into Substack, and I\u2019m curious what your habits are on here\u2026\n\nAre you mostly reading in the Posts, scrolling through the Notes, chatting in the messages? \n\nOr are you somewhat scheduled with your time on here?\n\nie. reading more towards the front end of the week, writing towards the back end? Or you do just come on here and see where you\u2019re curiosity takes you?\n\nAsking because I think I\u2019d like to be more intentional about how I show up on here. (I\u2019m an easily distracted person\u2026 \ud83d\ude05). There is SO much good content, almost everywhere. \n\nWould love to know what\u2019s working / not working for you all :)"}, {"name": "Dallas Payne", "handle": "daringnext", "comments": 259, "first_comment": "2026-01-27", "sub_count": 230, "comment_url": "https://substack.com/@daringnext/note/c-205691691", "first_comment_text": "I have to admit something... \n\nThere is a part of me that adores the smooth, gleaming, averageness of AI writing. No rough edges, no errors. The mediocrity doesn\u2019t jar. It flows beautifully, lands tight. Accepted widely in its polished perfection. I often wonder how many more iterations it would take to create \"the perfect post\".\n\nI find something is shifting in me at a tectonic level though. I no longer let Claude hold the draft; a protective paranoia has taken root. The wrestling to produce writing that really means something increases weekly. Odd metaphors are retained to indicate I am entirely human. Sentence structures I would have chucked out previously are kept. I hunt for variance, light and shade. I want at least one awkward moment. \n\nA perfectionist is choosing imperfection, on purpose. Is this my reformation era?\n\nWhat in the AI is happening here?! Send chocolate stat!!"}, {"name": "Caitlin McColl \ud83c\udde8\ud83c\udde6", "handle": "caitlinmccoll", "comments": 250, "first_comment": "2026-01-28", "sub_count": 236, "comment_url": "https://substack.com/@caitlinmccoll/note/c-206480635", "first_comment_text": "Thanks for the mention \ud83d\ude42"}, {"name": "AI Meets Girlboss", "handle": "aimeetsgirlboss", "comments": 226, "first_comment": "2025-12-17", "sub_count": 128, "comment_url": "https://substack.com/@aimeetsgirlboss/note/c-188705618", "first_comment_text": "I love a deep clean. \ud83e\ude77\ud83e\udda9 Doggo is an extra bonus.\ud83d\udc36"}, {"name": "Dr Sam Illingworth", "handle": "samillingworth", "comments": 204, "first_comment": "2025-12-21", "sub_count": 136, "comment_url": "https://substack.com/@samillingworth/note/c-190136346", "first_comment_text": "Thanks so much for the shoutout Alyssa. I totally member my own elbow as well and how that also correlated with a change to my feed in terms of great writers and creators (including you!) on tech and AI instead of growth and monetisation! \ud83d\ude4f"}, {"name": "Kim Doyal", "handle": "kimdoyal", "comments": 204, "first_comment": "2026-01-29", "sub_count": 242, "comment_url": "https://codelikeagirl.substack.com/p/you-are-already-technical-enough/comment/207070823", "first_comment_text": "Thank you for this, Alyssa,\nI spent way too many years thinking I wasn't technical enough (not in corporations, just working for myself), because I'm self-taught.\nYet here I am, 18 yrs later, still at it (and going deeper).\n\nAnd I LOVE LOVE LOVE that you phrased it as \"just talking to AI\"... that is what has been so amazing to me (800k words dictated, lol.. I'm so hooked on being able to talk naturally when I'm building things).\n\nAnd your illustrations are fabulous!\n"}, {"name": "Mia Kiraki \ud83c\udfad", "handle": "miakiraki", "comments": 197, "first_comment": "2026-01-09", "sub_count": 200, "comment_url": "https://substack.com/@miakiraki/note/c-197473403", "first_comment_text": "Volume is a trap.\n\nYou can\u2019t beat the bots at \u201cmore.\u201d\n\nSo don\u2019t.\n\nBe the person who knows what matters, like which bolt to turn, what to ignore.\n\nThat\u2019s the whole point of the ROBOTS ATE MY HOMEWORK philosophy.\n\nJoin me if you're tired of running a content circus and you'd rather move in the castle \ud83d\ude09"}, {"name": "Anna | how to boss AI", "handle": "annalevitt", "comments": 123, "first_comment": "2026-01-22", "sub_count": 227, "comment_url": "https://substack.com/@annalevitt/note/c-203556145", "first_comment_text": "Today is the shift from consumer to creator.\n\nI just created custom automated workflows in Claude Browser.\n\nFirst workflow: saves all my AI conversations to Google Docs automatically.\n\nSecond workflow: archives my entire chat history for future reference.\n\nI just became a builder. \ud83e\udd2f"}, {"name": "Code Like A Girl", "handle": "codelikeagirl", "comments": 103, "first_comment": "2025-11-13", "sub_count": 101, "comment_url": "https://substack.com/@codelikeagirl/note/c-176834458", "first_comment_text": "That\u2019s amazing!!! It\u2019s exactly how coaching should be. They are lucky to have you as their coach."}, {"name": "Cristina", "handle": "cristinapatrick", "comments": 103, "first_comment": "2025-11-17", "sub_count": 109, "comment_url": "https://cristinapatrick.substack.com/p/how-owning-my-use-of-ai-sparked-my/comment/178221594", "first_comment_text": "Thank you Alyssa for taking the time to read my post and comment. Transparency is one of the pillars of responsible use of AI. :) "}, {"name": "Jason Ives (Iverson)", "handle": "futurecomputer", "comments": 87, "first_comment": "2025-12-21", "sub_count": 136, "comment_url": "https://substack.com/@futurecomputer/note/c-190368361", "first_comment_text": "Housework \ud83d\ude2d\ud83d\ude2d"}, {"name": "JHong", "handle": "itsjhong", "comments": 85, "first_comment": "2026-03-04", "sub_count": 310, "comment_url": "https://substack.com/@itsjhong/note/c-223129119", "first_comment_text": "Hi! I love everyone in this reply <3\n\nSubscribing now Alyssa :)"}, {"name": "Rebecca Spitzer", "handle": "rspitzer", "comments": 83, "first_comment": "2026-02-03", "sub_count": 246, "comment_url": "https://substack.com/@rspitzer/note/c-209131892", "first_comment_text": "Having such a tough, long, tired day - nothing seems to cheer me up, even the momentum of finally submitting Magpie to the ChatGPT App Store. \ud83d\ude29 \n\n\n\nReminder: tomorrow is a new day and I can wake up feeling different. "}, {"name": "Elena | AI Product Leader", "handle": "elenacalvillo", "comments": 77, "first_comment": "2025-12-24", "sub_count": 166, "comment_url": "https://substack.com/@elenacalvillo/note/c-191385532", "first_comment_text": "Thank you so much, Alyssa! This is wonderful feedback \ud83e\udd17 and don\u2019t worry if you just signed up this will be up and running I want everyone get the chance to learn AI skills \ud83d\ude4f\ud83c\udffb "}, {"name": "Monica Goh", "handle": "thesiabrat", "comments": 73, "first_comment": "2026-02-16", "sub_count": 268, "comment_url": "https://substack.com/@thesiabrat/note/c-215376204", "first_comment_text": "This is how I feel about TV time. Thanks for sharing this and putting a positive perspective about the use of the tablet. It\u2019s given me a lot to think about. I\u2019m curious, what tablet games do your girls play? I\u2019d love for my 5-turning-6 and 7 year old boys to play on the tablet harmoniously instead of fighting over tablet time. It\u2019s part of the pain points right now. "}, {"name": "Karen Brasch \ud83d\ude81", "handle": "karenbrasch", "comments": 73, "first_comment": "2026-02-03", "sub_count": 246, "comment_url": "https://substack.com/@karenbrasch/note/c-209158046", "first_comment_text": "My \u2764\ufe0f mom \u2764\ufe0f just made her first AI picture EVER after she read my post about my rebrand and I that I feel like I\u2019m \u201ccaterpillar soup\u201d right now. \n\n\u201cCaterpillar soup for the soul!\u201d \ud83d\udc1b"}, {"name": "Adria J. Necula", "handle": "adriajnecula", "comments": 72, "first_comment": "2026-03-09", "sub_count": 334, "comment_url": "https://substack.com/@adriajnecula/note/c-225135039", "first_comment_text": "Such a beautiful thought to tag everyone for the impact they had on your journey. <3 Beautiful! \n\nAnd I agree, I\u2019m also seeing this despite being here for only a month!"}, {"name": "Karen Spinner", "handle": "karenspinner1", "comments": 67, "first_comment": "2026-01-04", "sub_count": 189, "comment_url": "https://substack.com/@karenspinner1/note/c-195306171", "first_comment_text": "Thanks so much for the kind words! \ud83e\udd17 Interested to see how the prompt works out for you!"}, {"name": "Olena Mytruk", "handle": "olenamytruk", "comments": 64, "first_comment": "2026-02-16", "sub_count": 268, "comment_url": "https://substack.com/@olenamytruk/note/c-215323722", "first_comment_text": "Hii @Alyssa Fu Ward, PhD! Look forward to getting to know you and your work better!"}, {"name": "Fran Davis", "handle": "frandavis", "comments": 58, "first_comment": "2026-02-16", "sub_count": 268, "comment_url": "https://substack.com/@frandavis/note/c-215381328", "first_comment_text": "Technology can now be a portal to the past. Kids can make their ancestors photos come to life. They can ask AI what music their grandparents listened to, what things they worried about, what slang they used. Connecting them to the past via today\u2019s technology can instill pride, build identity, and foster empathy. "}, {"name": "Mariam Vossough", "handle": "mariamvossough", "comments": 57, "first_comment": "2026-01-11", "sub_count": 204, "comment_url": "https://substack.com/@mariamvossough/note/c-198266858", "first_comment_text": "Thank you for this thoughtful response. What you describe - the aggregation of small biases - is the architecture of inequity. The hope is that AI can also become the microscope that helps us see it."}, {"name": "Jen Benford", "handle": "benfordtalentalchemy", "comments": 56, "first_comment": "2026-03-06", "sub_count": 312, "comment_url": "https://substack.com/@benfordtalentalchemy/note/c-223936614", "first_comment_text": "When I lived in England, people would say \u201care you okay?\u201d or \u201care you alright?\u201d constantly.\n\nIn North America, that question usually means something is wrong. Someone is checking on you. There is concern behind it.\n\nIn England it is just how you say hello. Casual. Constant. Completely unremarkable.\n\nSame words. Two different cultures. Completely different meanings.\n\nI think about this a lot as someone who is neurodivergent. So much of the confusion and exhaustion I carried for years wasn't about being broken \u2014 it was about being wired to read subtext in a world that wasn't always giving me the full picture.\n\nCulture informs language. Context changes everything.  And when you don't have it, you can spend a lifetime misreading perfectly ordinary moments as something much heavier than they are.\n\nLearning that was one of the most quietly liberating things that ever happened to me."}, {"name": "The Strategic Linguist", "handle": "thestrategiclinguist", "comments": 54, "first_comment": "2026-01-08", "sub_count": 199, "comment_url": "https://substack.com/@thestrategiclinguist/note/c-197170928", "first_comment_text": "\ud83d\udcdd Linguistics in the Field\n\nLinguistics is clear: meaning is something negotiated between speaker and listener.\n\nThat also means it isn\u2019t the speaker\u2019s job to anticipate every possible interpretation.\n\n\ud83d\udccc A gentle reminder for those of us who write in order to be understood: you don\u2019t have to carry the entire burden. \n\nWhen people misunderstand, it isn\u2019t always a failure of expression\u2014some of that work belongs to the reader, too."}, {"name": "Nicolle Weeks", "handle": "nicolleweeks", "comments": 53, "first_comment": "2026-01-08", "sub_count": 199, "comment_url": "https://substack.com/@nicolleweeks/note/c-196982567", "first_comment_text": "Yes! I wrote about this! https://nicolleweeks.substack.com/p/ai-jobs-for-non-techies"}, {"name": "MagickMica", "handle": "magickmica", "comments": 51, "first_comment": "2026-03-21", "sub_count": 370, "comment_url": "https://substack.com/@magickmica/note/c-230994888", "first_comment_text": "You couldn\u2019t have said it better!!!"}, {"name": "Jeremy Wright - Marketer/ECHO", "handle": "netmobs", "comments": 47, "first_comment": "2026-02-20", "sub_count": 286, "comment_url": "https://substack.com/@netmobs/note/c-217052120", "first_comment_text": "I asked my new \u201cknown operator\u201d AI who I\u2019d suggest adding, and it said @Anna | How to Boss AI . Fair, that\u2019s literally what I would have said, so I think this new layer is working!"}, {"name": "ToxSec", "handle": "toxsec", "comments": 45, "first_comment": "2026-03-04", "sub_count": 310, "comment_url": "https://substack.com/@toxsec/note/c-222758709", "first_comment_text": "Sam is literally the best :) he\u2019s introduced me to so many people here.\n\nand hello!!  i\u2019d love to start engaging here! \ud83d\udd25"}, {"name": "Daria Cupareanu", "handle": "dariacupareanu", "comments": 42, "first_comment": "2025-11-15", "sub_count": 105, "comment_url": "https://substack.com/@dariacupareanu/note/c-177464031", "first_comment_text": "AI doesn\u2019t remove the need for thinking. It removes the excuses. \n\nIf you\u2019re waiting for AI to do the heavy lifting of clarity or judgment, you\u2019re missing the point. \n\nThe real power is in forcing yourself to sharpen your own perspective first, then using AI to execute faster and test more ideas."}, {"name": "Emma Klint", "handle": "emmaklint", "comments": 40, "first_comment": "2025-11-25", "sub_count": 112, "comment_url": "https://substack.com/@emmaklint/note/c-180982047", "first_comment_text": ""}, {"name": "Suhana", "handle": "suhanasthings", "comments": 37, "first_comment": "2026-01-16", "sub_count": 215, "comment_url": "https://substack.com/@suhanasthings/note/c-200900480", "first_comment_text": "\ud83d\ude4b\ud83c\udffb i\u2019m not in tech (used to) and I\u2019ve started journaling whatever i\u2019m doing with AI. 100% feeling out of my depth with both AI and Substack and mildly worried agents are going to replace me \ud83d\ude05"}, {"name": "Sofie Couwenbergh", "handle": "sofiecouwenbergh", "comments": 36, "first_comment": "2026-02-17", "sub_count": 270, "comment_url": "https://substack.com/@sofiecouwenbergh/note/c-215695541", "first_comment_text": "@Substack Team we really need to be able to bookmark notes like this."}, {"name": "Cara Thomas", "handle": "carathomas", "comments": 36, "first_comment": "2026-03-22", "sub_count": 370, "comment_url": "https://theslowai.substack.com/p/how-creatives-actually-use-ai/comment/231646275", "first_comment_text": "Thank you so much for this and for sharing all of these amazing creators. I work in consulting and I also write poetry and designed an IRL adventure card game, and the way those worlds collide around AI right now is fascinating.\n\nIve recently been in my own exploration of the intersection of polarity, relationship and how AI may actually be a tool to expand our artistry around love and human relationships.\n\nI'm so happy I found your work!"}, {"name": "Dinah", "handle": "dinahbeingme", "comments": 36, "first_comment": "2025-11-21", "sub_count": 109, "comment_url": "https://substack.com/@dinahbeingme/note/c-179516428", "first_comment_text": "How did it go?"}, {"name": "Shannon Bindler", "handle": "shannonbindler", "comments": 35, "first_comment": "2026-03-04", "sub_count": 310, "comment_url": "https://substack.com/@shannonbindler/note/c-223105090", "first_comment_text": "Couldn't agree more! I've learned so much from @Dr Sam Illingworth \u2014 about Slow AI and how to be a better person on Substack. \ud83d\udc95"}, {"name": "charlene prince birkeland", "handle": "charleneprincebirkeland", "comments": 32, "first_comment": "2026-01-28", "sub_count": 236, "comment_url": "https://substack.com/@charleneprincebirkeland/note/c-206565867", "first_comment_text": "This post by @Alyssa Fu Ward, PhD has never been more timely.\u00a0When Pinterest announced layoffs yesterday, they said it was about \u201cmaking organizational changes to further deliver on our AI-forward strategy, which includes hiring AI-proficient talent.\u201d My immediate remark to @Jeff Birkeland was to call BS on it, because instead of hiring AI-proficient talent, they should INVEST in helping their current talent become AI proficient.  And also? This\u2026\ud83d\udc47"}, {"name": "Darlene", "handle": "aiconsultingmadesimple", "comments": 31, "first_comment": "2025-12-07", "sub_count": 122, "comment_url": "https://alyssafuward.substack.com/p/more-than-a-mirror-ai-as-a-bridge/comment/185337009", "first_comment_text": "I love your perspective on the connections AI can create. I\u2019m definitely in favor of using it personally and professionally, and I\u2019ve been amazed at how it opens doors for everyone, not just tech experts. Sure, there are alarming stories, but when we engage thoughtfully, AI becomes a way to connect, create, and build something meaningful together."}, {"name": "Valerie Ehrlich, PhD", "handle": "valerieehrlichphd", "comments": 30, "first_comment": "2025-12-18", "sub_count": 129, "comment_url": "https://substack.com/@valerieehrlichphd/note/c-189179494", "first_comment_text": "Thank you for sharing and reflecting on this piece! It really did feel like a totally different way of working and one that is filled with possibility (versus pessimism). I\u2019d love to hear what ideas it sparks. AI obviously does a lot for individual productivity but it\u2019s challenging - in a good way - to think about how it can help us work together as humans!"}, {"name": "Karen Smiley", "handle": "karensmiley", "comments": 29, "first_comment": "2025-11-15", "sub_count": 105, "comment_url": "https://substack.com/@karensmiley/note/c-177439162", "first_comment_text": "Thank you so much for your kind words and support, @Alyssa Fu Ward! And I'm so glad to know we share the mission of making AI opportunities available to all. \ud83d\ude0a"}, {"name": "Vee (PhD)", "handle": "veekanyo", "comments": 27, "first_comment": "2026-03-24", "sub_count": 381, "comment_url": "https://cristinapatrick.substack.com/p/you-dont-have-to-figure-this-out/comment/232393861", "first_comment_text": "This was such a great read of varying perspectives... and a beautiful display of the importance of figuring things out together in community esp. in a world that has become so fragmented, individualized, hurried.. etc. Here's to switching up the narrative \ud83d\ude4c\ud83c\udffe."}, {"name": "Tanya", "handle": "thecoffiestcoffee", "comments": 26, "first_comment": "2026-02-15", "sub_count": 261, "comment_url": "https://substack.com/@thecoffiestcoffee/note/c-214793331", "first_comment_text": "I felt the same way the first time I read an article from you. It\u2019s when you said something like \u201cI was just describing what I wanted to AI.\u201d"}, {"name": "Marcela Distefano", "handle": "barti70", "comments": 26, "first_comment": "2026-03-06", "sub_count": 312, "comment_url": "https://substack.com/@barti70/note/c-223923600", "first_comment_text": "Acting on fear feels like freedom.\n\nThat\u2019s the trick. The emotion narrows your options while convincing you that you\u2019re choosing. \n\nHow many of your \u201cdecisions\u201d came from fear disguised as action?\n\nhttps://ethicsv1.substack.com/p/the-faceless-hidden-persuaders-who"}, {"name": "AI.Mirror", "handle": "aimirrorandme", "comments": 26, "first_comment": "2026-02-16", "sub_count": 268, "comment_url": "https://substack.com/@aimirrorandme/note/c-215439036", "first_comment_text": "How lovely,  I dont mean to be intimidating its just so much passion about the work boils over and makes me a but OTT! "}, {"name": "Ting | Orienting with AI", "handle": "tzutingwang", "comments": 24, "first_comment": "2026-02-10", "sub_count": 250, "comment_url": "https://substack.com/@tzutingwang/note/c-212803021", "first_comment_text": "Looking forward to it!"}, {"name": "Katrina Watson", "handle": "katrinawatson", "comments": 24, "first_comment": "2026-03-15", "sub_count": 347, "comment_url": "https://alyssafuward.substack.com/p/say-the-obvious-part-out-loud/comment/227970322", "first_comment_text": "Oh this is such good advice. I used to get frustrated when talking to AI as it felt like it was missing obvious things. But then I realised it\u2019s only obvious to me cos I know the full context, it doesn\u2019t. The cool side effect is I\u2019m starting to find I\u2019m getting better at communicating with people because of it too."}, {"name": "Dheeraj Sharma", "handle": "genaiunplugged", "comments": 23, "first_comment": "2026-03-01", "sub_count": 302, "comment_url": "https://substack.com/@genaiunplugged/note/c-221252726", "first_comment_text": "I stopped using ChatGPT and dumped and forget everything in Nov 2025 and since then I am just in total love with Claude Code. Just like you.. hard to express the feeling for the love for Claude.. it has changed so much for me!! Above all keeps me distraction free no matter what\u2019s going on with latest and greatest in AI world these days :D .. Thank you so much @Kim Doyal for recommending me here. @Alyssa Fu Ward, PhD would be happy to answer anything if you want to run based on my experience with it so far.."}, {"name": "Shi Kang'ethe", "handle": "shiikooh", "comments": 22, "first_comment": "2026-03-22", "sub_count": 370, "comment_url": "https://substack.com/@shiikooh/note/c-231574521", "first_comment_text": "I can't wait!!"}, {"name": "Story Beyond Play", "handle": "storybeyondplay", "comments": 21, "first_comment": "2026-03-09", "sub_count": 334, "comment_url": "https://substack.com/@storybeyondplay/note/c-225503313", "first_comment_text": "I do use AI art to storyboard my writing and plot future versions of whatever title I\u2019m working on. It isn\u2019t music or dance, but I\u2019d be willing to contribute if I can help."}, {"name": "Diana O.", "handle": "aisynergydiana", "comments": 20, "first_comment": "2026-01-05", "sub_count": 190, "comment_url": "https://substack.com/@aisynergydiana/note/c-195704639", "first_comment_text": "I wrote this because using personal data forces a line to appear.\n\nThis piece is about why I slowed down before reopening the beta \u2014 and what I refuse to do with your information.\n\nIf you care about how things are built, this one is for you."}, {"name": "Catarina Costa Abreu", "handle": "catarinacostaabreu", "comments": 20, "first_comment": "2026-01-13", "sub_count": 209, "comment_url": "https://substack.com/@catarinacostaabreu/note/c-199255920", "first_comment_text": "This makes me so happy with my decision to focus on Substack as my primary social media platform. "}, {"name": "Jenny Ouyang", "handle": "jennyouyang", "comments": 20, "first_comment": "2025-11-02", "sub_count": 100, "comment_url": "https://substack.com/@jennyouyang/note/c-171585618", "first_comment_text": "That\u2019s hands down my favorite use situations too! Appreciate the share and shout out @Alyssa Fu Ward !"}, {"name": "April \u2766 The Narrative Nest", "handle": "thenarrativenest", "comments": 14, "first_comment": "2026-04-24", "sub_count": 476, "comment_url": "https://substack.com/@thenarrativenest/note/c-248503214", "first_comment_text": "E. North, I truly appreciate what you are considering here and I\u2019m giving what you say a lot of weight. I\u2019ve been wondering about many of these concerns but have not put them into words as eloquently as you have. \n\n\u201cIn older forms of learning, boredom, silence, and not knowing were not empty spaces. They were often the places where intimacy or inner life developed.\u201d\n\nMy daughter and I have spent a lot of time contemplating literature in these quiet and intimate spaces. And I\u2019m wondering if those explorations can live parallel to some AI use or not at all. I don\u2019t know yet. And I\u2019m holding off much of the technology for now. But I am wrangling with the reality of things to come. So thank you for your thoughtful response."}, {"name": "Badass Women in AI", "handle": "badasswomeninai", "comments": 8, "first_comment": "2026-04-17", "sub_count": 457, "comment_url": "https://substack.com/@badasswomeninai/note/c-244897585", "first_comment_text": "Aw, thank you SO much @Alyssa Fu Ward, PhD for all your support. Now I\u2019m the one blushing. "}, {"name": "SheWritesAI", "handle": "shewritesai", "comments": 7, "first_comment": "2026-04-06", "sub_count": 430, "comment_url": "https://substack.com/@shewritesai/note/c-238845349", "first_comment_text": "Our latest @SheWritesAI digest includes:\n\n\u2728 5 Jointly Authored Collaborative Articles by:\n\n1. @Karo (Product with Attitude) & @Ileana & @Judy Ossello (AI Mechanic) & @Jenny Ouyang & @Esha Pathak & @Elena | AI Product Leader & others \n\n2. @Code Like A Girl & Elena | AI Product Leader & @Dinah\n\n3. @Anna | how to boss AI & @Daria Cupareanu\n\n4. @AI Governance Lead \u26a1 & @Marcela Distefano\n\n5. @Karen Smiley & @Soulful Learning With AI\n\n\ud83d\udc9f 10 Featured Articles by @JHong , Karo, @Sari Azout, @Farida Khalaf, @Abi Awomosu, AI Governance Lead, Daria Cupareanu, @Kim Doyal, @AI Meets Girlboss, @Mia Kiraki \ud83c\udfad\n\n\ud83c\udfb2 10 Wildcard Picks by @Christina Pagel, @Janelle Teng Wade, @Alesia Zakharova, @Alina Khay, @Myranda | She Loves Stats, @Reality Re-Thunk, @Denise Wakeman, @Chelsey Sidler, @Bonnie Marcus, @Aishwarya Srinivasan\n\nplus 9 top-rated articles in 5 categories:\n\n\ud83d\udcaf Career & Leadership - @Dallas Payne\n\n\ud83d\udcaf Ethics & Society - Abi Awomosu, @Hollis Robbins\n\n\ud83d\udcaf Multiple AI Applications - Daria Cupareanu, @Maggie Vale (2), Kim Doyal\n\n\ud83d\udcaf Product Development - Jenny Ouyang\n\n\ud83d\udcaf Technology - @Jessica Talisman\n\nfor a total of \ud83d\udcf0 352 articles across 16 categories over 7 days, from 667 newsletters by SheWritesAI directory members."}, {"name": "Sarah Ennett - Seeking Ikigai", "handle": "sarahennett", "comments": 3, "first_comment": "2026-04-06", "sub_count": 430, "comment_url": "https://substack.com/@sarahennett/note/c-239148866", "first_comment_text": "Very much love this and spookily it's a better articulation of a conversation I had earlier today, about my passion for encouraging communities of learning for both psychological safety and to be inspired by people you know on how they use a tool\u2026 which teaches you so much more than theoretical examples \ud83e\udd70"}]};
+
+const parseDate = d3.timeParse("%Y-%m-%d");
+const fmtMonth  = d => { const m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; return m[d.getMonth()]+" "+d.getDate(); };
+const fmtFull   = d => { const m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; return m[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(); };
+
+const growth     = data.growth.map(d => ({ date: parseDate(d.date), count: d.count }));
+const commenters = data.commenters.map(d => ({ ...d, date: parseDate(d.first_comment) }));
+
+const thresholds = [0, 10, 30, 60, 120, Infinity];
+const radii      = [5, 7, 9.5, 13, 18];
+function getR(n) {
+  for (let i = 0; i < thresholds.length - 1; i++)
+    if (n >= thresholds[i] && n < thresholds[i+1]) return radii[i];
+  return radii[radii.length-1];
+}
+function hash(s) { let h=0; for (let c of s) h=(h*31+c.charCodeAt(0))&0xfffffff; return h; }
+const shortStems = new Set(['badasswomeninai','shewritesai','sarahennett','thenarrativenest']);
+const PIN_SPACE  = 160;
+function naturalStem(handle) {
+  if (shortStems.has(handle)) return 10 + (hash(handle) % 30);
+  return 25 + (hash(handle) % (PIN_SPACE - 30));
+}
+
+const tip = d3.select("#tooltip");
+const svg = d3.select("#chart").style("overflow","visible");
+
+function draw() {
+  svg.selectAll("*").remove();
+
+  const cardsBottom = document.querySelector('.cards').getBoundingClientRect().bottom;
+  const margin = { top: 16, right: 30, bottom: 36, left: 52 };
+  const totalW = Math.min(document.documentElement.clientWidth - 64, 1100);
+  const width  = totalW - margin.left - margin.right;
+  const chartH = Math.max(250, window.innerHeight - cardsBottom - margin.top - margin.bottom - 8);
+
+  svg.attr("width", totalW).attr("height", chartH + margin.top + margin.bottom);
+
+  const defs = svg.append("defs");
+  const glow = defs.append("filter").attr("id","glow").attr("x","-60%").attr("y","-60%").attr("width","220%").attr("height","220%");
+  glow.append("feGaussianBlur").attr("stdDeviation","5").attr("result","blur");
+  const fm = glow.append("feMerge");
+  fm.append("feMergeNode").attr("in","blur");
+  fm.append("feMergeNode").attr("in","SourceGraphic");
+
+  const grad = defs.append("linearGradient").attr("id","areaGrad").attr("x1","0").attr("y1","0").attr("x2","0").attr("y2","1");
+  grad.append("stop").attr("offset","0%").attr("stop-color","#F5C99A").attr("stop-opacity",.55);
+  grad.append("stop").attr("offset","100%").attr("stop-color","#F5C99A").attr("stop-opacity",.04);
+
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  const x = d3.scaleTime().domain(d3.extent(growth, d => d.date)).range([0, width]);
+  const y = d3.scaleLinear().domain([0, 510]).range([chartH, 0]);
+
+  g.selectAll(".gridline").data(y.ticks(5)).join("line")
+    .attr("class","gridline").attr("x1",0).attr("x2",width).attr("y1",d=>y(d)).attr("y2",d=>y(d));
+
+  g.append("path").datum(growth).attr("class","area")
+    .attr("d", d3.area().x(d=>x(d.date)).y0(y(0)).y1(d=>y(d.count)).curve(d3.curveMonotoneX));
+  g.append("path").datum(growth).attr("class","line")
+    .attr("d", d3.line().x(d=>x(d.date)).y(d=>y(d.count)).curve(d3.curveMonotoneX));
+
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${chartH})`)
+    .call(d3.axisBottom(x).ticks(d3.timeMonth.every(1)).tickFormat(fmtMonth).tickSize(0).tickPadding(10))
+    .call(a => a.select(".domain").remove());
+  g.append("g").attr("class","axis")
+    .call(d3.axisLeft(y).ticks(5).tickSize(0).tickPadding(8))
+    .call(a => a.select(".domain").remove());
+
+  g.append("a").attr("href","https://alyssafuward.substack.com").attr("target","_blank").style("cursor","pointer")
+    .append("text").attr("class","watermark")
+    .attr("x",width-4).attr("y",chartH-8).attr("text-anchor","end")
+    .text("ALYSSAFUWARD.SUBSTACK.COM");
+
+  // Build + simulate nodes
+  const nodes = commenters.map(d => {
+    const r  = getR(d.comments);
+    const sl = naturalStem(d.handle);
+    const tx = x(d.date);
+    const ty = y(d.sub_count);
+    return { d, r, sl, tx, ty, x: tx, y: ty - sl - r };
+  });
+
+  d3.forceSimulation(nodes)
+    .force("x",       d3.forceX(n => n.tx).strength(1.0))
+    .force("y",       d3.forceY(n => n.ty - n.sl - n.r).strength(0.15))
+    .force("collide", d3.forceCollide(n => n.r + 5))
+    .stop().tick(500);
+
+  nodes.forEach(n => {
+    n.x = n.tx;
+    n.y = Math.min(n.y, n.ty - n.r - 10);
+    n.y = Math.max(n.y, y(500) + n.r + 4);
+  });
+
+  function resetPin(grp, nd) {
+    grp.select(".pin-stem").interrupt()
+      .transition().duration(100).ease(d3.easeQuadOut).attr("y2", nd.headY);
+    grp.select(".pin-head").interrupt()
+      .transition().duration(100).ease(d3.easeQuadOut)
+      .attr("cy", nd.headY).attr("r", nd.r)
+      .attr("fill","#E07A10").style("filter","drop-shadow(0 1px 3px rgba(0,0,0,.2))");
+  }
+
+  svg.on("mouseleave", () => {
+    tip.style("opacity", 0);
+    g.selectAll(".pin-group").each(function() {
+      const nd = d3.select(this).datum();
+      if (nd && nd._hovered) { nd._hovered = false; resetPin(d3.select(this), nd); }
+    });
+  });
+
+  nodes.forEach(n => {
+    const { d, r, tx, ty } = n;
+    const headY    = n.y - ty;
+    const bigR     = r * 2.5;
+    const bigHeadY = headY - 28;
+
+    const grp = g.append("g").attr("class","pin-group")
+      .datum({ d, r, bigR, headY, bigHeadY, tx, ty })
+      .attr("transform", `translate(${tx},${ty})`);
+
+    grp.append("line").attr("class","pin-stem")
+      .attr("x1",0).attr("y1",0).attr("x2",0).attr("y2",headY)
+      .attr("stroke","#d4700f").attr("stroke-width",1.5).attr("stroke-opacity",.65)
+      .style("pointer-events","none");
+
+    grp.append("circle").attr("class","pin-head")
+      .attr("cx",0).attr("cy",headY).attr("r",r)
+      .attr("fill","#E07A10").attr("stroke","white").attr("stroke-width",2)
+      .style("filter","drop-shadow(0 1px 3px rgba(0,0,0,.2))")
+      .style("cursor","pointer")
+      .on("click", () => {
+        const nd = d3.select(grp.node()).datum();
+        const url = nd.d.comment_url || `https://substack.com/@${nd.d.handle}`;
+        window.open(url, "_blank");
+      });
+
+    grp.append("circle").attr("class","pin-hit")
+      .attr("cx",0).attr("cy",headY).attr("r",r).attr("fill","transparent")
+      .on("mouseenter", function() {
+        const nd = d3.select(grp.node()).datum();
+        if (nd._hovered) return;
+        nd._hovered = true;
+        grp.raise();
+        grp.select(".pin-stem").interrupt()
+          .transition().duration(85).ease(d3.easeBackOut.overshoot(1.2)).attr("y2", nd.bigHeadY);
+        grp.select(".pin-head").interrupt()
+          .transition().duration(85).ease(d3.easeBackOut.overshoot(1.2))
+          .attr("cy", nd.bigHeadY).attr("r", nd.bigR)
+          .attr("fill","#f08020").style("filter","url(#glow)");
+        const preview = nd.d.first_comment_text
+          ? nd.d.first_comment_text.slice(0,120) + (nd.d.first_comment_text.length > 120 ? '…' : '')
+          : '';
+        tip.style("opacity",1).html(`
+          <div class="tip-name">${nd.d.name}</div>
+          <div class="tip-detail" style="margin-bottom:6px">First comment: ${fmtFull(nd.d.date)}</div>
+          ${preview ? `<div class="tip-quote">"${preview}"</div>` : ''}
+          <div class="tip-link">↗ view comment</div>
+        `);
+      })
+      .on("mousemove", event => {
+        tip.style("left",(event.clientX+16)+"px").style("top",(event.clientY-12)+"px");
+      })
+      .on("mouseleave", function() {
+        const nd = d3.select(grp.node()).datum();
+        nd._hovered = false;
+        resetPin(grp, nd);
+        tip.style("opacity",0);
+      })
+      .on("click", () => {
+        const nd = d3.select(grp.node()).datum();
+        const url = nd.d.comment_url || `https://substack.com/@${nd.d.handle}`;
+        window.open(url, "_blank");
+      });
+  });
+}
+
+draw();
+(function() {
+  const btn = document.getElementById('info-btn');
+  const pop = document.getElementById('info-popover');
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (pop.style.display === 'block') { pop.style.display = 'none'; return; }
+    const rect = btn.getBoundingClientRect();
+    pop.style.left = Math.max(8, rect.left) + 'px';
+    pop.style.top  = (rect.bottom + 6) + 'px';
+    pop.style.display = 'block';
+  });
+  document.addEventListener('click', () => pop.style.display = 'none');
+})();
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(draw, 120);
+});
+</script>
+</body>
+</html>

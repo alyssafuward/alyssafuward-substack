@@ -38,6 +38,13 @@
     margin-bottom: 40px;
   }
 
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
   .btn {
     display: inline-block;
     background: #F97316;
@@ -47,6 +54,7 @@
     border-radius: 10px;
     font-size: 15px;
     font-weight: 500;
+    min-width: 240px;
     transition: background 0.2s ease, transform 0.2s ease;
   }
 
@@ -60,7 +68,10 @@
   <div class="card">
     <h1>Alyssa's <em>Substack Stories</em></h1>
     <p class="sub">Things that happened on the internet</p>
-    <a class="btn" href="./orange-story/">🍊 The Orange Story →</a>
+    <div class="links">
+      <a class="btn" href="./orange-story/">🍊 The Orange Story →</a>
+      <a class="btn" href="./substack-milestone/">📈 Subscriber Milestone →</a>
+    </div>
   </div>
 </body>
 </html>
