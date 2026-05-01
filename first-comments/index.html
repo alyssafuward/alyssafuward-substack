@@ -124,7 +124,7 @@
   <a href="https://substack.com/@alyssafuward" target="_blank">Message Alyssa</a> if you would like your information to be removed.
   <div style="margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px;display:flex;flex-direction:column;gap:6px;">
     <button id="toggle-labels" class="mode-btn">Show all comments</button>
-    <button id="toggle-ridic" class="mode-btn">Ridiculous mode 🎉</button>
+    <button id="toggle-ridic" class="mode-btn active">Stop the madness 😅</button>
   </div>
 </div>
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -155,7 +155,7 @@ function naturalStem(handle, subCount) {
 const tip = d3.select("#tooltip");
 const svg = d3.select("#chart").style("overflow","visible");
 
-let allTipsOn = false, ridicOn = false, ridicTimer = null;
+let allTipsOn = false, ridicOn = true, ridicTimer = null;
 let allTipEls = [];
 
 function clearAllTipEls() {
