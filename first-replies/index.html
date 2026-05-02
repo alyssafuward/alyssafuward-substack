@@ -102,7 +102,7 @@
 </style>
 </head>
 <body>
-<h2>First Replies · <a href="https://alyssafuward.substack.com" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #ddd;">alyssafuward.substack.com</a> · Thank you for connecting<span id="info-btn" title="About this data">ⓘ</span><button id="nav-toggle">all substackers ▾</button></h2>
+<h2>First Replies · <a href="https://alyssafuward.substack.com" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid #ddd;">alyssafuward.substack.com</a> · Thank you for connecting<span id="info-btn" title="About this data">ⓘ</span><button id="nav-toggle">all connections ▾</button></h2>
 <div class="cards">
   <div class="card">
     <div class="label">Total subscribers</div>
@@ -523,7 +523,7 @@ draw();
     a.addEventListener('click', e => {
       e.preventDefault();
       panel.style.display = 'none';
-      toggle.textContent = 'all substackers ▾';
+      toggle.textContent = 'all connections ▾';
       svg.selectAll(".pin-group").each(function(nd) {
         if (!nd || !nd.d || nd.d.handle !== d.handle) return;
         if (nd._hovered) return;
@@ -571,7 +571,7 @@ draw();
   toggle.addEventListener('click', () => {
     const open = panel.style.display === 'block';
     panel.style.display = open ? 'none' : 'block';
-    toggle.textContent = open ? 'all substackers ▾' : 'all substackers ▴';
+    toggle.textContent = open ? 'all connections ▾' : 'all connections ▴';
   });
 })();
 let resizeTimer;
