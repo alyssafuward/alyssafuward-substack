@@ -225,9 +225,13 @@ function spawnWalker(chartW, floorY, sz, startX, imgIdx) {
     el, x, dir: Math.random() < 0.5 ? 1 : -1,
     speed: 0.03 + Math.random() * 0.15,
     sz: wsz, chartW, baseY: walkerBaseY,
+    imgIdx: idx,
     jumping: false, jumpStart: 0, jumpDur: 0, jumpH: 0
   };
   _walkers.push(walker);
+  const counts = {};
+  _walkers.forEach(w => { counts[w.imgIdx] = (counts[w.imgIdx] || 0) + 1; });
+  [..._walkers].sort((a, b) => counts[b.imgIdx] - counts[a.imgIdx]).forEach(w => w.el.raise());
   el.on("click", function(event) {
     event.stopPropagation();
     const svgRect = svg.node().getBoundingClientRect();
