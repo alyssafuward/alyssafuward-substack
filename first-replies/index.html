@@ -210,8 +210,15 @@ function stopRidiculous() {
 }
 
 const _walkers = [];
+const MAX_PER_ORANGE = 20;
 function spawnWalker(chartW, floorY, sz, startX, imgIdx) {
   const idx = imgIdx !== undefined ? imgIdx : Math.floor(Math.random() * ORANGE_IMGS.length);
+  const sameKind = _walkers.filter(w => w.imgIdx === idx);
+  if (sameKind.length >= MAX_PER_ORANGE) {
+    const oldest = sameKind[0];
+    oldest.el.remove();
+    _walkers.splice(_walkers.indexOf(oldest), 1);
+  }
   const wsz = idx === 3 ? sz * 0.72 : idx === 7 ? sz * 1.33 : sz;
   const walkerBaseY = floorY - wsz;
   const x = startX !== undefined ? Math.max(0, Math.min(startX - wsz/2, chartW - wsz)) : Math.random() * Math.max(0, chartW - wsz);
@@ -219,7 +226,7 @@ function spawnWalker(chartW, floorY, sz, startX, imgIdx) {
     .attr("class", "orange-walker")
     .attr("href", ORANGE_IMGS[idx])
     .attr("width", wsz).attr("height", wsz)
-    .attr("y", walkerBaseY).attr("x", x)
+    .style("transform", `translate(${x}px,${walkerBaseY}px)`)
     .style("pointer-events", "auto").style("cursor", "pointer");
   const walker = {
     el, x, dir: Math.random() < 0.5 ? 1 : -1,
@@ -257,7 +264,7 @@ function startOrangeWalk() {
       .attr("class", "orange-walker")
       .attr("href", img)
       .attr("width", wsz).attr("height", wsz)
-      .attr("y", walkerBaseY).attr("x", x)
+      .style("transform", `translate(${x}px,${walkerBaseY}px)`)
       .style("pointer-events", "auto").style("cursor", "pointer");
     const walker = {
       el, x, dir: i % 2 === 0 ? 1 : -1,
@@ -271,7 +278,14 @@ function startOrangeWalk() {
       spawnWalker(chartW, floorY, sz, event.clientX - svgRect.left, i);
     });
   });
+  resumeOrangeWalk();
+}
+function resumeOrangeWalk() {
+  if (orangeTimer) orangeTimer.stop();
+  let lastUpdate = -Infinity;
   orangeTimer = d3.timer(elapsed => {
+    if (elapsed - lastUpdate < 33) return; // throttle to ~30fps, matches the bounce loop
+    lastUpdate = elapsed;
     _walkers.forEach(w => {
       w.x += w.dir * w.speed * 16;
       if (w.x + w.sz > w.chartW) { w.x = w.chartW - w.sz; w.dir = -1; }
@@ -289,12 +303,15 @@ function startOrangeWalk() {
         if (t >= 1) { w.jumping = false; }
         else { yOff = -w.jumpH * Math.sin(t * Math.PI); }
       }
-      w.el.attr("x", w.x).attr("y", w.baseY + yOff);
+      w.el.style("transform", `translate(${w.x}px,${w.baseY + yOff}px)`);
     });
   });
 }
-function stopOrangeWalk() {
+function pauseOrangeWalk() {
   if (orangeTimer) { orangeTimer.stop(); orangeTimer = null; }
+}
+function stopOrangeWalk() {
+  pauseOrangeWalk();
   svg.selectAll(".orange-walker").remove();
   _walkers.length = 0;
 }
@@ -571,6 +588,15 @@ let resizeTimer;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(draw, 120);
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    if (ridicTimer) { ridicTimer.stop(); ridicTimer = null; }
+    pauseOrangeWalk();
+  } else {
+    if (ridicOn) startRidiculous();
+    if (orangeWalkOn) resumeOrangeWalk();
+  }
 });
 </script>
 </body>
