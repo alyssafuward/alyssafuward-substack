@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step Up Step Together Archive</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --bg: #f2f8fd;
+    --surface: #ffffff;
+    --surface-2: #c8def0;
+    --ink: #1a1a1a;
+    --muted: #666666;
+    --faint: #8fa9bd;
+    --line: #d8ecf8;
+    --accent: #1f6fa8;
+    --accent-ink: #ffffff;
+    --accent-soft: #dcebf6;
+    --shadow: 0 1px 2px rgba(31, 111, 168, 0.08);
+    --serif: "DM Serif Display", ui-serif, Charter, Georgia, serif;
+    --sans: "DM Sans", ui-sans-serif, -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1c2b;
+      --surface: #16283c;
+      --surface-2: #1f3850;
+      --ink: #f2f8fd;
+      --muted: #9fb4c7;
+      --faint: #64798d;
+      --line: #24425e;
+      --accent: #6fb3e0;
+      --accent-ink: #0f1c2b;
+      --accent-soft: #1b3a52;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0f1c2b;
+    --surface: #16283c;
+    --surface-2: #1f3850;
+    --ink: #f2f8fd;
+    --muted: #9fb4c7;
+    --faint: #64798d;
+    --line: #24425e;
+    --accent: #6fb3e0;
+    --accent-ink: #0f1c2b;
+    --accent-soft: #1b3a52;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 64px 32px 110px;
+  }
+
+  header.masthead {
+    margin-bottom: 40px;
+  }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .eyebrow a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .eyebrow a:hover,
+  .eyebrow a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .byline {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 4.2vw, 56px);
+    line-height: 1.08;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+
+  .dek {
+    font-size: 17.5px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0 0 32px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stat .n {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 30px;
+    color: var(--ink);
+  }
+
+  .stat .l {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* trend chart */
+  section.trend {
+    margin-bottom: 48px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .trend h2 {
+    font-family: var(--serif);
+    font-size: 27px;
+    font-weight: 400;
+    margin: 0 0 10px;
+  }
+
+  .trend .dek {
+    font-size: 15.5px;
+    margin-bottom: 28px;
+  }
+
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  #trend-chart {
+    width: 100%;
+    height: auto;
+    min-width: 640px;
+    display: block;
+    overflow: visible;
+  }
+
+  .axis-label,
+  .qtr-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    fill: var(--faint);
+  }
+
+  .qtr-label.hiatus-mark {
+    fill: var(--faint);
+  }
+
+  .cap-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    fill: var(--muted);
+    text-anchor: middle;
+  }
+
+  .share-callout {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    fill: var(--accent);
+  }
+
+  .gridline {
+    stroke: var(--line);
+    stroke-width: 1px;
+  }
+
+  .seg-other { fill: var(--faint); opacity: 0.55; }
+  .seg-ai { fill: var(--accent); }
+
+  .bar-hit {
+    fill: transparent;
+    cursor: pointer;
+  }
+
+  .hiatus-bracket {
+    stroke: var(--faint);
+    stroke-width: 1px;
+    fill: none;
+  }
+
+  .hiatus-text {
+    font-family: var(--sans);
+    font-style: italic;
+    font-size: 13px;
+    fill: var(--faint);
+    text-anchor: middle;
+  }
+
+  .chart-tooltip {
+    position: fixed;
+    pointer-events: auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink);
+    width: 440px;
+    max-width: 88vw;
+    transform: translate(-50%, -100%);
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    z-index: 10;
+  }
+
+  .chart-tooltip.visible { opacity: 1; }
+  .chart-tooltip .tt-title {
+    font-family: var(--serif);
+    font-size: 19px;
+    margin-bottom: 2px;
+  }
+  .chart-tooltip .tt-summary {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin: 1px 0 11px;
+    padding-bottom: 11px;
+    border-bottom: 1px solid var(--line);
+  }
+  .chart-tooltip .tt-posts {
+    max-height: 65vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .chart-tooltip .tt-post {
+    display: grid;
+    grid-template-columns: 10px 1fr;
+    column-gap: 10px;
+    row-gap: 2px;
+  }
+  .chart-tooltip .tt-post .dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    margin-top: 5px;
+  }
+  .chart-tooltip .dot-ai { background: var(--accent); }
+  .chart-tooltip .dot-other { background: var(--faint); opacity: 0.55; }
+  .chart-tooltip .tt-post-title {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .chart-tooltip .tt-post-title:hover,
+  .chart-tooltip .tt-post-title:focus-visible {
+    text-decoration: underline;
+  }
+  .chart-tooltip .tt-post-cat {
+    grid-column: 2;
+    font-size: 11.5px;
+    color: var(--faint);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .trend-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 16px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+
+  .trend-legend .item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .trend-legend .swatch {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+
+  /* distribution chart */
+  section.distribution {
+    margin-bottom: 40px;
+  }
+
+  .distribution h2 {
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+    font-weight: 600;
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 190px 1fr 40px;
+    align-items: center;
+    gap: 16px;
+    padding: 7px 0;
+  }
+
+  .bar-row .label {
+    font-size: 14.5px;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bar-track {
+    background: var(--surface-2);
+    border-radius: 4px;
+    height: 13px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    min-width: 6px;
+  }
+
+  .bar-row .count {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 14.5px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* filters */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    padding: 14px 0;
+    z-index: 5;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .chip {
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--accent);
+    background: var(--surface);
+    color: var(--accent);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+
+  .chip:hover {
+    background: var(--accent-soft);
+  }
+
+  .chip:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  /* category sections */
+  .category {
+    margin-bottom: 40px;
+    scroll-margin-top: 70px;
+  }
+
+  .category-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .category-head h3 {
+    font-family: var(--serif);
+    font-size: 25px;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .category-head .count {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--faint);
+  }
+
+  .category-desc {
+    font-size: 14.5px;
+    color: var(--muted);
+    margin: 0 0 18px;
+    max-width: 60ch;
+  }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 20px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .entry .date {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--faint);
+    padding-top: 3px;
+    white-space: nowrap;
+  }
+
+  .entry .title {
+    display: block;
+    font-size: 16.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 4px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .entry .title:hover,
+  .entry .title:focus-visible {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .entry .subtitle {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--faint);
+  }
+
+  @media (max-width: 520px) {
+    .entry { grid-template-columns: 1fr; gap: 4px; }
+    .entry .date { padding-top: 0; }
+    .bar-row { grid-template-columns: 96px 1fr 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow"><a href="https://alyssafuward.substack.com" target="_blank" rel="noopener noreferrer">Step Up Step Together</a> — 82 published pieces</div>
+    <p class="byline">Alyssa Fu Ward, PhD</p>
+    <h1>Three and a half years, indexed</h1>
+    <p class="dek">Every published article from the newsletter, sorted into the threads that actually run through it — grounded in the CSV export, not guesswork. Many pieces braid two or three of these together; each is filed under the one it's most about.</p>
+    <div class="stat-row">
+      <div class="stat"><span class="n" id="stat-total">—</span><span class="l">articles</span></div>
+      <div class="stat"><span class="n">Dec 2022</span><span class="l">first post</span></div>
+      <div class="stat"><span class="n">Aug 2026</span><span class="l">latest post</span></div>
+      <div class="stat"><span class="n" id="stat-cats">—</span><span class="l">topics</span></div>
+    </div>
+  </header>
+
+  <section class="trend">
+    <h2>Topic mix, by quarter</h2>
+    <p class="dek">In early 2023, AI was 9% of what she wrote about — one post in eleven. After a writing hiatus, AI usage climbed steadily and peaked at 90% in Q1 2026 (9 of 10 posts), staying dominant into Q2–Q3 2026 as a handful of personal and milestone pieces returned to the mix.</p>
+    <div class="chart-wrap">
+      <svg id="trend-chart" viewBox="0 0 1000 434" role="img" aria-label="Stacked bar chart of posts per quarter, split into AI and everything else, showing AI's share rising from 9% in Q1 2023 to a peak of 90% in Q1 2026 and staying above 50% through Q3 2026"></svg>
+      <div class="chart-tooltip" id="chart-tooltip"></div>
+    </div>
+    <div class="trend-legend">
+      <div class="item"><span class="swatch" style="background:var(--accent)"></span>AI</div>
+      <div class="item"><span class="swatch" style="background:var(--faint);opacity:.55"></span>Everything else</div>
+    </div>
+  </section>
+
+  <section class="distribution">
+    <h2>By topic</h2>
+    <div id="bars"></div>
+  </section>
+
+  <nav class="filters" id="filters"></nav>
+
+  <main id="categories"></main>
+
+  <footer>Source: Substack export (posts.csv), published posts only. Categorized by topic for browsing, not by Alyssa's own tagging.</footer>
+</div>
+
+<script>
+  const CATS = [
+    { id: "ai", label: "AI", desc: "Getting hands-on with AI — prompts, tools, and what it's actually like to build and think alongside it." },
+    { id: "work", label: "Workplace & Career", desc: "Interviews, transitions, teams, and the day-to-day of being a person at work." },
+    { id: "self", label: "Self & Identity", desc: "Making sense of who you're becoming, one reflection at a time." },
+    { id: "anxiety", label: "Anxiety & Mental Health", desc: "Naming the spiral, and finding the way back to calm." },
+    { id: "writing", label: "Writing & Creativity", desc: "On the practice of writing itself, and the art that spills out around it." },
+    { id: "women", label: "Women & DEI", desc: "Gender, voice, and who gets to take up space." },
+    { id: "family", label: "Family & Parenthood", desc: "Where life outside work shows up in the newsletter — kids, home, the people around her." },
+    { id: "milestones", label: "Milestones & Reflection", desc: "Anniversaries, year-in-reviews, and marking how far the journey's come." }
+  ];
+
+  const POSTS = [
+    ["2022-12-28","From academia to data science: A story of my career journey so far","I have an unusual journey when it comes to being a data scientist \u2026at least I used to think so. Here is my story.","work","https://alyssafuward.substack.com/p/from-academia-to-data-science"],
+    ["2022-12-29","Your voice matters: Why I write","Share your story. This is why I share mine.","writing","https://alyssafuward.substack.com/p/your-voice-matters-why-i-write"],
+    ["2023-01-04","Preparing for interviews: Interviewing is a skill that requires practice","Five tips on how to practice for interviews to calm anxiety and build confidence over time","anxiety","https://alyssafuward.substack.com/p/preparing-for-interviews-interviewing"],
+    ["2023-01-11","There's always time to pause and reset","Whether you\u2019re facing big changes or everyday challenges, take a moment to take care of yourself","anxiety","https://alyssafuward.substack.com/p/theres-always-time-to-pause-and-reset"],
+    ["2023-01-18","Rise of the robot helper: Exploring example use cases of ChatGPT","A summary of my conversation with an AI writing assistant about social constructs, mental health, creativity, and the erasure of diverse voices","ai","https://alyssafuward.substack.com/p/rise-of-the-robot-helper-exploring"],
+    ["2023-01-26","Self-promotion and different ways to be: Pulling out strengths from perceived weaknesses","Claiming your contributions is required to be successful in the workplace, but women are less likely to do it. I share sociocultural considerations on why this is hard and what we can do about it.","women","https://alyssafuward.substack.com/p/self-promotion-and-different-ways"],
+    ["2023-02-06","From clash to connection: How to resolve conflicts and channel creativity together","Some ideas for how to turn conflicts into opportunities to share your different voices and grow together","work","https://alyssafuward.substack.com/p/from-clash-to-connection-how-to-resolve"],
+    ["2023-02-27","Recovering from interviews: The stories we tell ourselves","How I shift from agitation to self-acceptance after an evaluative experience","anxiety","https://alyssafuward.substack.com/p/recovering-from-interviews-the-stories"],
+    ["2023-03-02","Characteristics of high-functioning and fulfilling teams","Good teams achieve Impact through Excellence while also providing Support for the Whole Person.","work","https://alyssafuward.substack.com/p/characteristics-of-high-functioning"],
+    ["2023-03-08","Happy International Women\u2019s Day! Let\u2019s talk about individuals and system change","Reflections on how people across the power spectrum can change existing systems to create more equity across groups","women","https://alyssafuward.substack.com/p/happy-international-womens-day-lets"],
+    ["2023-03-16","The First 90 Days (Intro): The twists and turns of transitions","Navigating work transitions is like traveling to a new culture","work","https://alyssafuward.substack.com/p/the-first-90-days-intro-the-twists"],
+    ["2023-03-24","Managing stressful events: Anger, observation, and intention","An illustration of two potential reactions to stress","anxiety","https://alyssafuward.substack.com/p/managing-stressful-events-anger-observation"],
+    ["2023-03-31","From academia to industry: Transferable skills","Academic skills that are in high demand in industry","work","https://alyssafuward.substack.com/p/from-academia-to-industry-transferable"],
+    ["2023-04-05","Productivity Hack: Eat the Frog","You won't want to, but it's good for you","work","https://alyssafuward.substack.com/p/productivity-hack-eat-the-frog"],
+    ["2023-04-18","The First 90 Days (Ch 1): Prepare Yourself","How to effectively onboard to a new position while navigating common challenges","work","https://alyssafuward.substack.com/p/the-first-90-days-ch-1-prepare-yourself"],
+    ["2023-04-25","The First 90 Days (Ch 2): Accelerate Your Learning","Make sure you\u2019re asking the right questions by creating the right kind of plan","work","https://alyssafuward.substack.com/p/the-first-90-days-ch-2-accelerate"],
+    ["2023-05-04","A writing milestone: 20 weeks!","I set a goal at the start of the year\u2026 and I\u2019ve been achieving it","milestones","https://alyssafuward.substack.com/p/a-writing-milestone-20-weeks"],
+    ["2023-05-12","Writing about how to be a person: This is my lens","Taking a moment to reflect on why I write and what I want to write about","self","https://alyssafuward.substack.com/p/writing-about-how-to-be-a-person"],
+    ["2023-05-19","Integrating life, work, and parenthood","Manage your energy by staying grounded and knowing you don't have to do it alone","family","https://alyssafuward.substack.com/p/integrating-life-work-and-parenthood"],
+    ["2023-05-26","My layoff experience: A shift in reality toward a different me","Layoffs as a path to the person you want to be","work","https://alyssafuward.substack.com/p/my-layoff-experience-a-shift-in-reality"],
+    ["2023-12-01","Kaley Klemp: Awareness, Growth, and Curiosity","Reflections on Conscious Leadership","self","https://alyssafuward.substack.com/p/kaley-klemp-awareness-growth-and"],
+    ["2024-12-12","I\u2019m back! What to expect from me","I'm back! And I want to write about a lot of things.","milestones","https://alyssafuward.substack.com/p/im-back-what-to-expect-from-me"],
+    ["2024-12-23","Here Comes 2025 - An End of Year Reflection Exercise","Highlights, Disappointments, Game Changers - Oh My!","milestones","https://alyssafuward.substack.com/p/here-comes-2025-an-end-of-year-reflection"],
+    ["2025-01-03","We are more than our work: Recapping my art endeavors from 2024","Starting 2025 with something I've never done before - sharing my art in this publication!","self","https://alyssafuward.substack.com/p/we-are-more-than-our-work-recapping"],
+    ["2025-01-08","Sketchnote: A summary of Ethan Mollick\u2019s four rules for living and working with AI","As the landscape of AI continues to rapidly evolve, these principles offer flexible, optimistic and concrete guidance for how to navigate that landscape","ai","https://alyssafuward.substack.com/p/sketchnote-a-summary-of-ethan-mollicks"],
+    ["2025-01-16","The importance of DEI programs: Why institutional support matters for different ways of being","There are so many different ways to be as humans, and there is no one right way to be. Creating cultures that support diversity require institutional support.","women","https://alyssafuward.substack.com/p/the-importance-of-dei-programs-why"],
+    ["2025-02-05","Change in the world starts with a change in you: A sketchnote on how to shift your mindset and find inner peace with Dr. Emma Sepp\u00e4l\u00e4","The world is an overwhelming place right now. I can't control what is happening in society around me, but I do have a say over my own mind.","self","https://alyssafuward.substack.com/p/change-in-the-world-starts-with-a"],
+    ["2025-02-12","This layoff does not define you: Revisiting my layoff experience","Being laid off, even for (bogus) \"performance\" reasons, are not a reflection of who you are","work","https://alyssafuward.substack.com/p/this-layoff-does-not-define-you-revisiting"],
+    ["2025-02-18","Becoming a coach: Expanding into a new phase of growth and fulfillment","Special announcement! I am now officially a certified coach and I'm open for coaching!","milestones","https://alyssafuward.substack.com/p/from-academia-to-data-science-to"],
+    ["2025-02-24","How to become a Likeable Badass\u2026 while managing self-doubt: The answer is closer than you think","Of course just when I sit down to write about how to show up as a strong woman, self-doubt comes creeping in","self","https://alyssafuward.substack.com/p/how-to-become-a-likeable-badass-while"],
+    ["2025-03-06","\u201cWhy am I doing their job?\u201d: Unexpected tensions (and opportunities) when data meet business","When I first transitioned from academia to data science, I thought my biggest struggle would be proving I\u2019m \u201ctechnical enough\u201d. Instead, it was something I never saw coming.","work","https://alyssafuward.substack.com/p/why-am-i-doing-their-job-unexpected"],
+    ["2025-03-11","Show the world your superheroine story: Celebrating International Women\u2019s Day with comics, storyboarding, and origin stories","Celebrating women power through comics and storyboarding? Yes, please!","women","https://alyssafuward.substack.com/p/show-the-world-your-superheroine"],
+    ["2025-03-18","AI, AI, AI, oh my! 3 tips to turn the potential of AI into reality","Now is the time to test out AI and make it work for you. Here's how I got started and how you can too.","ai","https://alyssafuward.substack.com/p/ai-ai-ai-oh-my-3-tips-to-turn-the"],
+    ["2025-03-25","\u201cBut how do I get started using AI?\u201d: 11 real-life on-the-ground examples of chats I\u2019ve had with ChatGPT","Writing, business building, and song choices - examples of easy ways to get started with AI","ai","https://alyssafuward.substack.com/p/but-how-do-i-get-started-using-ai"],
+    ["2025-04-01","More than \u201cin the zone\u201d: How flow can be the key to happiness","We all know flow means \"being in the zone\". What many don\u2019t realize is how flow can be a gateway to lasting happiness","self","https://alyssafuward.substack.com/p/more-than-in-the-zone-how-flow-can"],
+    ["2025-04-08","Do it scared: We\u2019ll do it together","I'm doing it scared, and I'm talking about it. And that scares me, too.","anxiety","https://alyssafuward.substack.com/p/do-it-scared-well-do-it-together"],
+    ["2025-04-15","Atomic Habits: The lasting power of small improvements over time","Changing who you are takes shifting a behavior one step at a time.","self","https://alyssafuward.substack.com/p/atomic-habits-the-lasting-power-of"],
+    ["2025-04-22","You don\u2019t need the perfect prompt to get started with AI: Just have a conversation","If you feel overwhelmed by the barrage of AI how-tos, step inside my post. You already have everything you need to use AI.","ai","https://alyssafuward.substack.com/p/you-dont-need-the-perfect-prompt"],
+    ["2025-04-25","[Live from AI #1] Use a casual prompt to start a meaningful conversation","An example ChatGPT conversation on tailoring your resume (plus bonus behind-the-scenes footage) and how you don\u2019t need the \u201cperfect prompt\u201d","ai","https://alyssafuward.substack.com/p/live-from-ai-1-use-a-casual-prompt"],
+    ["2025-05-14","40 reflections on turning 40: A journey of coming into one\u2019s own","I didn't think I was experienced enough to be turning 40. After I reviewed 40 reflections, however, I changed my mind.","milestones","https://alyssafuward.substack.com/p/40-reflections-on-turning-40-a-journey"],
+    ["2025-05-20","From data scientist to sketchnote artist: Overcoming the fear of putting yourself out there","This week I'm giving a talk waaay out of the realm of my data science day job, and I want to tell you why","writing","https://alyssafuward.substack.com/p/from-data-scientist-to-sketchnote"],
+    ["2025-05-30","[Live from AI #2] How I used AI to go from feeling bad about my writing to finding direction","Everyone gets writer\u2019s block at some point. Having a conversation with AI can help move you forward.","ai","https://alyssafuward.substack.com/p/live-from-ai-2-how-i-used-ai-to-go"],
+    ["2025-06-04","[Live from AI #3] When anxiety kept me awake, AI helped me connect to myself: A real conversation","In the dark of the night, when anxious thoughts start creeping, AI can become an unexpectedly comforting resource","ai","https://alyssafuward.substack.com/p/live-from-ai-3-when-anxiety-kept"],
+    ["2025-06-19","From superpower to super-doubt: How to reconnect with yourself when you\u2019re in a spiral","They say feedback is a gift, but what do you do when the gift morphs into an endless loop of all the mistakes you've made?","anxiety","https://alyssafuward.substack.com/p/from-superpower-to-super-doubt-how"],
+    ["2025-07-02","From vacation mode to maintenance mode: 4 tips to stay connected to yourself at work","You go on vacation, amazing! But when you return to real life, burnout sets back in.","work","https://alyssafuward.substack.com/p/from-vacation-mode-to-maintenance"],
+    ["2025-07-23","When fear shows up at work: 6 tips on how to move with fear and make it work for you","[Cross-posted from LinkedIn] I revisited this article at a time when I needed it, and it surprised me how much my past self comforted my current self","anxiety","https://alyssafuward.substack.com/p/when-fear-shows-up-at-work-6-tips"],
+    ["2025-09-10","On returning to writing and moving past stuckness","It's been a month and a half, and I'm warming up the writing muscles","writing","https://alyssafuward.substack.com/p/on-returning-to-writing-and-moving"],
+    ["2025-10-03","Another milestone! Certified executive coach and what it's like to work with me","It's me, hi, I'm a certified executive coach, it's me","milestones","https://alyssafuward.substack.com/p/another-milestone-certified-executive"],
+    ["2025-10-17","Vibe coding AI apps and having fun while doing it","The first edition of a new series, Alyssa and AI in Action, where I showcase experiences using AI. This post features using AI to vibe code. Including a zine-format sketchnote summary!","ai","https://alyssafuward.substack.com/p/vibe-coding-ai-apps-and-having-fun"],
+    ["2025-10-22","New biceps, new brain muscles: What strength training taught me about perseverance at work","I recently joined a gym. For a wet noodle like me, this is huge. Here's what I've learned about how to become mentally strong as physical strength grows.","self","https://alyssafuward.substack.com/p/new-biceps-new-brain-muscles-what"],
+    ["2025-11-04","[Part 1] From system change to redefining how to human: The uniquely disruptive impact of AI","Part 1 of a series on how to use and build Human-Centered AI Capability","ai","https://alyssafuward.substack.com/p/part-1-from-system-change-to-redefining"],
+    ["2025-11-21","[Part 2] Introducing a Human-Centered AI Capability Framework: An Overview","Introducing a simple, comprehensive framework to make sense of what it means to \"use AI\" by separating what is human from what is the machine","ai","https://alyssafuward.substack.com/p/part-2-introducing-a-human-centered"],
+    ["2025-11-24","Introducing 400 Word Notes: A new series for sharing micro-reflections more freely","Testing a new way to share notes at the intersection of work, technology, and how to human","milestones","https://alyssafuward.substack.com/p/introducing-400-word-notes-a-new"],
+    ["2025-11-25","When the world feels noisy around you, remember: There is no one right way to use AI","Noisy world, noisy brain. A little social comparison with the supportive help of AI was just the boost I needed.","ai","https://alyssafuward.substack.com/p/when-the-world-feels-noisy-around"],
+    ["2025-11-26","Starting with AI is as simple as starting with what you know: Here\u2019s why","Using AI can expand what you're capable of doing, but only if you learn how to talk to it, first.","ai","https://alyssafuward.substack.com/p/starting-with-ai-is-as-simple-as"],
+    ["2025-11-30","More than a convenience: Cooking with AI can be transformative","Cooking used to stress me out. Now I have a cooking partner, cook, and sous chef at my fingertips.","ai","https://alyssafuward.substack.com/p/more-than-a-convenience-cooking-with"],
+    ["2025-12-04","More than a mirror: AI as a bridge for interconnection between me, you, and everyone else","An AI pep talk unexpectedly turns into a reflection on how AI connects us all together","ai","https://alyssafuward.substack.com/p/more-than-a-mirror-ai-as-a-bridge"],
+    ["2025-12-06","Remind your brain: You can come back to your moment of calm","Preparing for the day and its many activities starts with a moment of checking in","anxiety","https://alyssafuward.substack.com/p/remind-your-brain-you-can-come-back"],
+    ["2025-12-08","AI in action: A real-time conversation with AI on presence, statistical patterns, and what makes us human","How a conversation with AI evolved from a brain dump to the realization that every moment is full of aliveness","ai","https://alyssafuward.substack.com/p/ai-in-action-a-real-time-conversation"],
+    ["2025-12-11","[Part 3] The human side of the Human-Centered AI Readiness and Transformation Framework: Overview of Human Actions","A deep dive into the Human Actions dimension of the Human-Centered AI Readiness and Transformation Framework","ai","https://alyssafuward.substack.com/p/part-3-the-human-side-of-the-human"],
+    ["2025-12-26","From Meta layoffs to expanding potential with AI: Celebrating three years of finding my voice","To celebrate Step Up Step Together's three year anniversary, I walk through my journey of finding my voice","milestones","https://alyssafuward.substack.com/p/from-meta-layoffs-to-expanding-potential"],
+    ["2026-01-07","Year in Review exercise: Celebrate and reflect on notable experiences","An annual practice to celebrate and reflect on the past year and set an intention for the year ahead","milestones","https://alyssafuward.substack.com/p/year-in-review-exercise-celebrate"],
+    ["2026-02-03","Creating my Substack album cover with ChatGPT: An exercise in back-and-forth creation with AI","What I thought would be a fast one-prompt exercise turned into a reminder that the best creations with AI happen through conversation","ai","https://alyssafuward.substack.com/p/creating-my-substack-album-cover"],
+    ["2026-02-11","Writing with AI: It's not what you think","How AI can be a writing-adjacent partner that amplifies your voice (instead of a ghost writer that averages you out)","ai","https://alyssafuward.substack.com/p/writing-with-ai-its-not-what-you"],
+    ["2026-02-18","You have what you need to meet this moment","A response to the viral article \"Something Big is Happening\" on the disruption of AI; and how to move from fear to agency","ai","https://alyssafuward.substack.com/p/you-have-what-you-need-to-meet-this-moment"],
+    ["2026-02-24","Making claymation versions of ourselves with ChatGPT and Gemini","A journey in AI-generated human-intensely-managed claymation versions of me, my daughters, and my mother","ai","https://alyssafuward.substack.com/p/making-claymation-versions-of-ourselves"],
+    ["2026-03-11","Say the obvious part out loud","A foundational principle and uniquely human superpower for communicating clearly with AI","ai","https://alyssafuward.substack.com/p/say-the-obvious-part-out-loud"],
+    ["2026-03-18","How Creatives Are Actually Using AI (And What They Refuse to Let It Do)","","ai","https://alyssafuward.substack.com/p/how-creatives-are-actually-using"],
+    ["2026-03-20","ChatGPT Me: A mini-app to extract your side of the conversation","Switching from ChatGPT to Claude? Add this to your transfer kit.","ai","https://alyssafuward.substack.com/p/chatgpt-me-a-mini-app-to-extract"],
+    ["2026-03-25","If my 7 year old can vibe code an app, so can you","And she did. Here's how we did it together.","ai","https://alyssafuward.substack.com/p/if-my-7-year-old-can-vibe-code-an"],
+    ["2026-03-28","A tale of failures, oranges, and Claude Code to the rescue","When AI animations go awry and Substack fails, one tool is ready to meet the call","ai","https://alyssafuward.substack.com/p/a-tale-of-failures-oranges-and-claude"],
+    ["2026-04-10","How a side art project turned into a brand","Sometimes when you create something from the heart, it grows into ways you don't expect","self","https://alyssafuward.substack.com/p/how-a-side-art-project-turned-into-a-brand"],
+    ["2026-04-17","You can build with AI, and we can do it together: Introducing Open Room Open Source","Take your vibe coding to the next level. We can vibe code collectively together.","ai","https://alyssafuward.substack.com/p/we-can-build-together-with-ai-introducing"],
+    ["2026-04-21","If my mom and my daughter can build with AI, so can you","\"Pull requests.\" \"GitHub issues.\" \"Feature branches.\" These words can sound intimidating but the actions they represent don't have to be. You can build with AI.","ai","https://alyssafuward.substack.com/p/if-my-70-year-old-mother-and-my-almost"],
+    ["2026-04-29","You are already technical enough for AI","If tech bros can build products that shape the world we live in, we can, too.","ai","https://alyssafuward.substack.com/p/you-are-already-technical-enough"],
+    ["2026-05-02","491\u2026 492\u2026 493\u2026 Substack milestone incoming! And how I built an app with AI to celebrate you","Six months ago I had 111 subscribers. Now I'm on the cusp of a major milestone and I had to create an app to say thank you","ai","https://alyssafuward.substack.com/p/491-492-493-substack-milestone-incoming"],
+    ["2026-05-11","Writing with AI: It's not what you think","How AI can be a writing-adjacent partner that amplifies your voice (instead of a ghost writer that averages you out)","ai","https://alyssafuward.substack.com/p/writing-with-ai-its-not-what-you-23d"],
+    ["2026-05-14","I\u2019m not enough. I am enough.","A personal essay moving from anxiety to being exactly what I needed for my hiding self","anxiety","https://alyssafuward.substack.com/p/im-not-enough-i-am-enough"],
+    ["2026-05-30","Take a chance to make a connection","What I learned from putting myself out there for three days straight at a work event","work","https://alyssafuward.substack.com/p/take-a-chance-to-make-a-connection"],
+    ["2026-06-03","The HART Studio is open! Come on in.","The launch of the HART Studio is here!","ai","https://alyssafuward.substack.com/p/the-hart-studio-is-open-come-on-in"],
+    ["2026-07-01","Applying for the Anthropic Fellows Program and how I created an AI Red Team to help me do it","I saw an opportunity. I ignored it. And then I went for it.","ai","https://alyssafuward.substack.com/p/applying-for-the-anthropic-fellows"],
+    ["2026-08-11","#0 / a new step","A personal essay on how I am evolving Step Up Step Together - what I am writing for, how I will write, and a new paid tier","milestones","https://alyssafuward.substack.com/p/0-a-new-step"]
+  ];
+
+  // fixed quarter timeline (Q4 2022 – Q3 2026); counts & posts are derived from POSTS below,
+  // so the chart and the tooltip can never drift out of sync with the article list.
+  const QUARTER_ORDER = [
+    ["Q4 ’22", "Q4 2022", 2022, 4],
+    ["Q1 ’23", "Q1 2023", 2023, 1],
+    ["Q2 ’23", "Q2 2023", 2023, 2],
+    ["Q3 ’23", "Q3 2023", 2023, 3],
+    ["Q4 ’23", "Q4 2023", 2023, 4],
+    ["Q1 ’24", "Q1 2024", 2024, 1],
+    ["Q2 ’24", "Q2 2024", 2024, 2],
+    ["Q3 ’24", "Q3 2024", 2024, 3],
+    ["Q4 ’24", "Q4 2024", 2024, 4],
+    ["Q1 ’25", "Q1 2025", 2025, 1],
+    ["Q2 ’25", "Q2 2025", 2025, 2],
+    ["Q3 ’25", "Q3 2025", 2025, 3],
+    ["Q4 ’25", "Q4 2025", 2025, 4],
+    ["Q1 ’26", "Q1 2026", 2026, 1],
+    ["Q2 ’26", "Q2 2026", 2026, 2],
+    ["Q3 ’26", "Q3 2026", 2026, 3]
+  ];
+
+  const CAT_LABEL = Object.fromEntries(CATS.map(c => [c.id, c.label]));
+
+  function buildQuarters() {
+    const byKey = {};
+    POSTS.forEach(([date, title, subtitle, catId, url]) => {
+      const [y, m] = date.split("-").map(Number);
+      const q = Math.floor((m - 1) / 3) + 1;
+      const key = `${y} Q${q}`;
+      if (!byKey[key]) byKey[key] = { ai: 0, other: 0, posts: [] };
+      byKey[key][catId === "ai" ? "ai" : "other"]++;
+      byKey[key].posts.push({ title, catId, url });
+    });
+    return QUARTER_ORDER.map(([short, full, y, q]) => {
+      const agg = byKey[`${y} Q${q}`] || { ai: 0, other: 0, posts: [] };
+      return { short, full, ai: agg.ai, other: agg.other, total: agg.ai + agg.other, posts: agg.posts };
+    });
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  }
+
+  function renderTrendChart() {
+    const svg = document.getElementById("trend-chart");
+    const tooltip = document.getElementById("chart-tooltip");
+    const NS = "http://www.w3.org/2000/svg";
+    const W = 1000, H = 434;
+    const margin = { top: 46, right: 20, bottom: 88, left: 44 };
+    const plotW = W - margin.left - margin.right;
+    const plotH = 300;
+    const niceMax = 15;
+    const quarters = buildQuarters();
+    const n = quarters.length;
+    const slot = plotW / n;
+    const barW = Math.min(24, slot * 0.62);
+    const baseline = margin.top + plotH;
+
+    const yFor = v => margin.top + plotH - (v / niceMax) * plotH;
+
+    const el = tag => document.createElementNS(NS, tag);
+
+    // gridlines + y ticks
+    [0, 5, 10, 15].forEach(v => {
+      const y = yFor(v);
+      const line = el("line");
+      line.setAttribute("class", "gridline");
+      line.setAttribute("x1", margin.left);
+      line.setAttribute("x2", margin.left + plotW);
+      line.setAttribute("y1", y);
+      line.setAttribute("y2", y);
+      svg.appendChild(line);
+
+      const t = el("text");
+      t.setAttribute("class", "axis-label");
+      t.setAttribute("x", margin.left - 8);
+      t.setAttribute("y", y + 3);
+      t.setAttribute("text-anchor", "end");
+      t.textContent = v;
+      svg.appendChild(t);
+    });
+
+    function roundedTopPath(x, y, w, h, r) {
+      if (h <= 0) return "";
+      r = Math.min(r, h, w / 2);
+      return `M${x},${y + h} L${x},${y + r} Q${x},${y} ${x + r},${y} L${x + w - r},${y} Q${x + w},${y} ${x + w},${y + r} L${x + w},${y + h} Z`;
+    }
+
+    quarters.forEach((q, i) => {
+      const { ai, other, total } = q;
+      const x = margin.left + i * slot + (slot - barW) / 2;
+
+      const otherHRaw = (other / niceMax) * plotH;
+      const aiHRaw = (ai / niceMax) * plotH;
+      const gap = (ai > 0 && other > 0) ? 2 : 0;
+      const otherH = Math.max(0, otherHRaw - gap / 2);
+      const aiH = Math.max(0, aiHRaw - gap / 2);
+
+      const otherY = baseline - otherH;
+      const aiY = otherY - gap - aiH;
+
+      if (other > 0) {
+        const isTop = ai === 0;
+        const path = el("path");
+        path.setAttribute("class", "seg-other");
+        path.setAttribute("d", isTop
+          ? roundedTopPath(x, otherY, barW, otherH, 4)
+          : `M${x},${baseline} L${x},${otherY} L${x + barW},${otherY} L${x + barW},${baseline} Z`);
+        svg.appendChild(path);
+      }
+
+      if (ai > 0) {
+        const path = el("path");
+        path.setAttribute("class", "seg-ai");
+        path.setAttribute("d", roundedTopPath(x, aiY, barW, aiH, 4));
+        svg.appendChild(path);
+      }
+
+      // cap label (total)
+      if (total > 0) {
+        const topY = ai > 0 ? aiY : otherY;
+        const cap = el("text");
+        cap.setAttribute("class", "cap-label");
+        cap.setAttribute("x", x + barW / 2);
+        cap.setAttribute("y", topY - 9);
+        cap.textContent = total;
+        svg.appendChild(cap);
+      }
+
+      // x label
+      const xl = el("text");
+      xl.setAttribute("class", "qtr-label");
+      xl.setAttribute("x", x + barW / 2);
+      xl.setAttribute("y", baseline + 22);
+      xl.setAttribute("text-anchor", "middle");
+      xl.textContent = q.short;
+      svg.appendChild(xl);
+
+      // hover hit target across full slot
+      const hit = el("rect");
+      hit.setAttribute("class", "bar-hit");
+      hit.setAttribute("x", margin.left + i * slot);
+      hit.setAttribute("y", margin.top);
+      hit.setAttribute("width", slot);
+      hit.setAttribute("height", plotH);
+      hit.addEventListener("mouseenter", e => showTip(e, q));
+      hit.addEventListener("mousemove", e => showTip(e, q));
+      hit.addEventListener("mouseleave", scheduleHide);
+      svg.appendChild(hit);
+    });
+
+    // share callouts: first substantial quarter, the peak, and the pullback after
+    addCallout(1, "9% AI");
+    addCallout(13, "90% AI");
+    addCallout(14, "67% AI");
+
+    function addCallout(idx, label) {
+      const q = quarters[idx];
+      const x = margin.left + idx * slot + slot / 2;
+      const topV = Math.max(q.ai, q.total);
+      const y = yFor(topV) - 26;
+      const t = el("text");
+      t.setAttribute("class", "share-callout");
+      t.setAttribute("x", x);
+      t.setAttribute("y", y);
+      t.setAttribute("text-anchor", "middle");
+      t.textContent = label;
+      svg.appendChild(t);
+    }
+
+    // hiatus bracket over the three fully-empty quarters (Q1'24 – Q3'24, indices 5..7)
+    const hStart = margin.left + 5 * slot + 2;
+    const hEnd = margin.left + 8 * slot - 2;
+    const hY = baseline + 42;
+    const bracket = el("path");
+    bracket.setAttribute("class", "hiatus-bracket");
+    bracket.setAttribute("d", `M${hStart},${hY - 6} L${hStart},${hY} L${hEnd},${hY} L${hEnd},${hY - 6}`);
+    svg.appendChild(bracket);
+    const hText = el("text");
+    hText.setAttribute("class", "hiatus-text");
+    hText.setAttribute("x", (hStart + hEnd) / 2);
+    hText.setAttribute("y", hY + 18);
+    hText.textContent = "9-month gap in posting";
+    svg.appendChild(hText);
+
+    let hideTimer = null;
+    function scheduleHide() {
+      hideTimer = setTimeout(hideTip, 200);
+    }
+    tooltip.addEventListener("mouseenter", () => clearTimeout(hideTimer));
+    tooltip.addEventListener("mouseleave", scheduleHide);
+
+    function showTip(e, q) {
+      clearTimeout(hideTimer);
+      const share = q.total ? Math.round((q.ai / q.total) * 100) : null;
+      const summary = q.total
+        ? `${q.total} post${q.total === 1 ? "" : "s"}${share !== null ? ` · ${share}% AI` : ""}`
+        : "No posts published";
+      const rows = q.posts.length
+        ? q.posts.map(p => `
+            <div class="tt-post">
+              <span class="dot ${p.catId === "ai" ? "dot-ai" : "dot-other"}"></span>
+              <a class="tt-post-title" href="${p.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.title)}</a>
+              <span class="tt-post-cat">${CAT_LABEL[p.catId]}</span>
+            </div>`).join("")
+        : "";
+      tooltip.innerHTML = `
+        <div class="tt-title">${q.full}</div>
+        <div class="tt-summary">${summary}</div>
+        <div class="tt-posts">${rows}</div>
+      `;
+      tooltip.classList.add("visible");
+
+      // measure after content is in the DOM, then place it so it stays on-screen
+      const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+      const margin8 = 8;
+      const fitsAbove = e.clientY - 14 - th >= margin8;
+      tooltip.style.top = (fitsAbove ? e.clientY - 14 : e.clientY + 14) + "px";
+      tooltip.style.transform = fitsAbove ? "translate(-50%, -100%)" : "translate(-50%, 0)";
+
+      let left = e.clientX;
+      const halfW = tw / 2;
+      left = Math.max(margin8 + halfW, Math.min(window.innerWidth - margin8 - halfW, left));
+      tooltip.style.left = left + "px";
+    }
+    function hideTip() {
+      tooltip.classList.remove("visible");
+    }
+  }
+
+  renderTrendChart();
+
+  const monthFmt = d => {
+    const dt = new Date(d + "T00:00:00");
+    return dt.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  };
+
+  const byCat = {};
+  CATS.forEach(c => byCat[c.id] = []);
+  POSTS.forEach(p => byCat[p[3]].push(p));
+
+  document.getElementById("stat-total").textContent = POSTS.length;
+  document.getElementById("stat-cats").textContent = CATS.length;
+
+  const ranked = [...CATS].sort((a, b) => byCat[b.id].length - byCat[a.id].length);
+  const maxCount = Math.max(...ranked.map(c => byCat[c.id].length));
+
+  const barsEl = document.getElementById("bars");
+  ranked.forEach(c => {
+    const n = byCat[c.id].length;
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML = `
+      <div class="label">${c.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(n / maxCount * 100).toFixed(1)}%"></div></div>
+      <div class="count">${n}</div>
+    `;
+    barsEl.appendChild(row);
+  });
+
+  const filtersEl = document.getElementById("filters");
+  const allChip = document.createElement("button");
+  allChip.className = "chip active";
+  allChip.textContent = `All (${POSTS.length})`;
+  allChip.dataset.cat = "all";
+  filtersEl.appendChild(allChip);
+  ranked.forEach(c => {
+    const chip = document.createElement("button");
+    chip.className = "chip";
+    chip.textContent = `${c.label} (${byCat[c.id].length})`;
+    chip.dataset.cat = c.id;
+    filtersEl.appendChild(chip);
+  });
+
+  filtersEl.addEventListener("click", e => {
+    const btn = e.target.closest(".chip");
+    if (!btn) return;
+    filtersEl.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    btn.classList.add("active");
+    const cat = btn.dataset.cat;
+    document.querySelectorAll(".category").forEach(sec => {
+      sec.style.display = (cat === "all" || sec.dataset.cat === cat) ? "" : "none";
+    });
+  });
+
+  const mainEl = document.getElementById("categories");
+  ranked.forEach(c => {
+    const posts = byCat[c.id].slice().sort((a, b) => a[0].localeCompare(b[0]));
+    const sec = document.createElement("section");
+    sec.className = "category";
+    sec.dataset.cat = c.id;
+    sec.innerHTML = `
+      <div class="category-head">
+        <h3>${c.label}</h3>
+        <span class="count">${posts.length} ${posts.length === 1 ? "piece" : "pieces"}</span>
+      </div>
+      <p class="category-desc">${c.desc}</p>
+    `;
+    posts.forEach(p => {
+      const entry = document.createElement("div");
+      entry.className = "entry";
+      entry.innerHTML = `
+        <div class="date">${monthFmt(p[0])}</div>
+        <div>
+          <a class="title" href="${p[4]}" target="_blank" rel="noopener noreferrer">${p[1]}</a>
+          ${p[2] ? `<p class="subtitle">${p[2]}</p>` : ""}
+        </div>
+      `;
+      sec.appendChild(entry);
+    });
+    mainEl.appendChild(sec);
+  });
+</script>
+</body>
+</html>
