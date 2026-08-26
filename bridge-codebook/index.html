@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bridge Codebook</title>
+<meta name="description" content="A coded content analysis of 87 Substack posts testing the &quot;I can't &rarr; I can&quot; value-prop narrative against 3.5 years of published writing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --pale-sky:#F2F8FD;
+    --mid-sky:#C8DEF0;
+    --deep-sky:#1F6FA8;
+    --deep-sky-soft:#6FA3CA;
+    --white:#FFFFFF;
+    --ink:#1A1A1A;
+    --mid-grey:#666666;
+    --sky-rule:#D8ECF8;
+
+    --font-display:'DM Serif Display', Georgia, serif;
+    --font-body:'DM Sans', -apple-system, 'Segoe UI', sans-serif;
+
+    --measure: 44rem;
+    --wide: 54rem;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ background:var(--pale-sky); }
+  body{
+    margin:0;
+    background:var(--pale-sky);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:18px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  }
+
+  .page{ max-width:var(--wide); margin:0 auto; padding:4.5rem 1.5rem 0; }
+  @media (max-width:640px){ .page{ padding:3rem 1.25rem 0; } }
+
+  .prose{ max-width:var(--measure); }
+
+  h1,h2{ font-family:var(--font-display); font-weight:400; text-wrap:balance; margin:0; color:var(--ink); }
+  .eyebrow{
+    font-family:var(--font-body); font-size:12px; font-weight:600;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--deep-sky);
+    display:flex; align-items:center; gap:.6em;
+  }
+  .eyebrow::before{ content:''; width:1.4em; height:1px; background:var(--deep-sky); opacity:.4; display:inline-block; }
+
+  .home-link{
+    display:inline-flex; align-items:center; gap:.4em; font-family:var(--font-body);
+    font-size:.9rem; font-weight:600; color:var(--deep-sky); text-decoration:none;
+    margin-bottom:1.6rem;
+  }
+  .home-link:hover{ text-decoration:underline; }
+
+  /* ---------- Masthead ---------- */
+  .masthead{ padding-bottom:3rem; border-bottom:1px solid var(--sky-rule); margin-bottom:3.5rem; }
+  .masthead .eyebrow{ margin-bottom:1.2rem; }
+  .masthead h1{
+    font-size:clamp(2.6rem, 5.6vw, 4rem);
+    line-height:1.06;
+  }
+  .masthead .dek{
+    font-size:1.22rem; color:var(--mid-grey); max-width:39rem; margin-top:1.3rem;
+    font-weight:400;
+  }
+  .masthead .dek em{ font-style:italic; color:var(--ink); }
+  .masthead .meta{
+    margin-top:1.7rem; font-family:var(--font-body); font-size:.95rem; font-weight:500;
+    color:var(--mid-grey); display:flex; flex-wrap:wrap; gap:.5em 1.3em;
+    font-variant-numeric:tabular-nums;
+  }
+  .masthead .meta b{ color:var(--ink); font-weight:700; }
+  .masthead .meta a{ color:inherit; text-decoration:none; border-bottom:1px solid currentColor; opacity:.85; }
+  .masthead .meta a:hover{ opacity:1; }
+
+  /* ---------- Section scaffolding ---------- */
+  section{ margin-bottom:4.4rem; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-bottom:1.7rem; flex-wrap:wrap; }
+  .section-head h2{ font-size:1.85rem; }
+  .section-head .n{ font-family:var(--font-body); font-size:.92rem; font-weight:500; color:var(--mid-grey); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  p{ margin:0 0 1rem; }
+  p:last-child{ margin-bottom:0; }
+  .caption{ margin-top:1.4rem; font-size:1.02rem; color:var(--mid-grey); }
+
+  /* ---------- Hero stat ---------- */
+  .hero-stat{
+    display:grid; grid-template-columns: auto 1fr; gap:2.4rem;
+    align-items:center; background:var(--white); border:1px solid var(--sky-rule);
+    border-radius:12px; padding:2.6rem 2.4rem; margin-bottom:1.6rem;
+  }
+  @media (max-width:680px){ .hero-stat{ grid-template-columns:1fr; gap:1.2rem; } }
+  .hero-stat .num{
+    font-family:var(--font-display); font-weight:400; font-size:clamp(4.2rem,10vw,6.2rem);
+    line-height:.86; color:var(--deep-sky); font-variant-numeric:tabular-nums;
+  }
+  .hero-stat .num small{ font-size:.28em; font-family:var(--font-body); font-weight:600; color:var(--mid-grey); margin-left:.15em; }
+  .hero-stat .cap{ font-size:1.15rem; color:var(--ink); max-width:30rem; }
+  .hero-stat .cap em{ font-style:italic; color:var(--mid-grey); }
+
+  /* segmented narrative bar */
+  .segbar{ display:flex; height:2.3rem; border-radius:6px; overflow:hidden; border:1px solid var(--sky-rule); }
+  .segbar .seg{ display:flex; align-items:center; justify-content:center; font-family:var(--font-body); font-size:.85rem; font-weight:700; white-space:nowrap; }
+  .segbar .seg.s3{ background:var(--deep-sky); color:var(--white); }
+  .segbar .seg.s2{ background:var(--deep-sky-soft); color:var(--white); }
+  .segbar .seg.s1{ background:var(--mid-grey); opacity:.5; }
+  .segbar .seg.s0{ background:var(--pale-sky); color:var(--mid-grey); }
+  .segbar-legend{ display:flex; flex-wrap:wrap; gap:1.5rem; margin-top:.85rem; font-family:var(--font-body); font-size:.92rem; color:var(--mid-grey); }
+  .segbar-legend span{ display:inline-flex; align-items:center; gap:.4em; }
+  .swatch{ width:.75em; height:.75em; border-radius:2px; display:inline-block; }
+
+  /* ---------- Methodology strip ---------- */
+  .method-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--sky-rule); border:1px solid var(--sky-rule); border-radius:12px; overflow:hidden; }
+  @media (max-width:680px){ .method-grid{ grid-template-columns:1fr; } }
+  .method-cell{ background:var(--white); padding:1.7rem 1.8rem; }
+  .method-cell .tag{ margin-bottom:.65rem; }
+  .method-cell p{ font-size:1.02rem; color:var(--mid-grey); margin:0; }
+  .method-cell .dots{ display:flex; gap:.35rem; margin-top:.9rem; }
+  .method-cell .dots i{ width:.6rem; height:.6rem; border-radius:50%; display:inline-block; }
+
+  /* ---------- Bars ---------- */
+  .barlist{ display:flex; flex-direction:column; gap:1rem; }
+  .barrow{ display:grid; grid-template-columns: 12.5rem 1fr 8rem; align-items:center; gap:1rem; }
+  @media (max-width:600px){ .barrow{ grid-template-columns:7.6rem 1fr 6.4rem; gap:.7rem; } }
+  .barrow .val{ white-space:nowrap; }
+  .barrow .val small{ font-size:.82em; font-weight:400; color:var(--mid-grey); opacity:.85; }
+  .barrow .label{ font-size:.98rem; color:var(--ink); font-weight:500; }
+  .barrow .label small{ display:block; font-size:.8rem; color:var(--mid-grey); font-weight:400; margin-top:.1rem; }
+  .track{ position:relative; height:1.7rem; background:var(--pale-sky); border-radius:5px; overflow:hidden; }
+  .fill{ position:absolute; inset:0 auto 0 0; background:var(--deep-sky); border-radius:5px; transition:width .5s cubic-bezier(.2,.7,.2,1); cursor:default; }
+  .fill.dim{ background:var(--mid-grey); opacity:.45; }
+  .barrow .val{ font-family:var(--font-body); font-size:.95rem; font-weight:600; text-align:right; font-variant-numeric:tabular-nums; color:var(--mid-grey); }
+
+  /* ---------- Identity <-> Practical strip plot: one shared axis, one outlier called out ---------- */
+  .strip-wrap{ background:var(--white); border:1px solid var(--sky-rule); border-radius:12px; padding:2.8rem 2.2rem 2.4rem; }
+  .strip-endpoints{ display:flex; justify-content:space-between; font-family:var(--font-body); font-size:.92rem; font-weight:600; color:var(--mid-grey); margin-bottom:.5rem; }
+  .strip-track{ position:relative; height:2px; background:var(--sky-rule); border-radius:2px; margin:3.6rem 1.2rem 2.8rem; }
+  .strip-cluster-band{ position:absolute; top:-9px; bottom:-9px; background:var(--mid-sky); opacity:.35; border-radius:9px; }
+  .strip-cluster-caption{ position:absolute; top:calc(100% + 12px); text-align:center; font-family:var(--font-body); font-size:.88rem; color:var(--mid-grey); }
+  .strip-dot{ position:absolute; top:50%; width:.8rem; height:.8rem; border-radius:50%; background:var(--deep-sky-soft); border:2px solid var(--white); box-shadow:0 0 0 1px var(--sky-rule); transform:translate(-50%,-50%); cursor:default; z-index:2; }
+  .strip-dot.major{ width:1.55rem; height:1.55rem; background:var(--deep-sky); box-shadow:0 0 0 5px rgba(31,111,168,.14); z-index:3; }
+  .strip-callout{
+    position:absolute; left:50%; bottom:calc(100% + 12px); transform:translateX(-100%);
+    white-space:nowrap; background:var(--ink); color:var(--white); font-family:var(--font-body);
+    font-size:.98rem; font-weight:600; padding:.55rem .9rem; border-radius:8px;
+  }
+  .strip-callout b{ font-family:var(--font-display); font-weight:400; font-size:1.15em; }
+  .strip-callout::after{
+    content:''; position:absolute; top:100%; right:.5rem; width:0; height:0;
+    border:6px solid transparent; border-top-color:var(--ink); border-bottom:none;
+  }
+
+  /* ---------- Flow (big-number comparison) ---------- */
+  .flow{ display:flex; align-items:stretch; gap:.5rem; background:var(--white); border:1px solid var(--sky-rule); border-radius:12px; padding:2.4rem 1.8rem; }
+  @media (max-width:680px){ .flow{ flex-direction:column; gap:1.4rem; } }
+  .flow-step{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem; flex:1; text-align:center; padding:.7rem; border-radius:12px; }
+  .flow-step .flow-num{ font-family:var(--font-display); font-weight:400; font-size:2.7rem; color:var(--deep-sky-soft); line-height:1; font-variant-numeric:tabular-nums; }
+  .flow-step.peak{ background:var(--pale-sky); }
+  .flow-step.peak .flow-num{ font-size:3.9rem; color:var(--deep-sky); }
+  .flow-step.outlier .flow-num{ color:var(--mid-grey); }
+  .flow-step .flow-label{ font-family:var(--font-body); font-size:.98rem; color:var(--ink); font-weight:600; line-height:1.4; }
+  .flow-step .flow-label small{ display:block; font-size:.86rem; color:var(--mid-grey); font-weight:400; margin-top:.2rem; }
+  .flow-arrow{ align-self:center; font-size:1.5rem; color:var(--sky-rule); font-weight:700; }
+  @media (max-width:680px){ .flow-arrow{ transform:rotate(90deg); } }
+
+  .trend-callout{
+    font-size:1.05rem; color:var(--ink); background:var(--white); border:1px solid var(--sky-rule);
+    border-radius:12px; padding:1.4rem 1.6rem; margin-top:1.2rem;
+  }
+  .trend-callout b{ color:var(--deep-sky); font-weight:700; }
+
+  .trend-wrap{ background:var(--white); border:1px solid var(--sky-rule); border-radius:12px; padding:2rem 2rem 1.5rem; margin-top:1.2rem; }
+  .trend-wrap .eyebrow{ margin-bottom:1.2rem; }
+  .trend-svg{ width:100%; height:auto; display:block; overflow:visible; }
+  .trend-labels{ display:grid; grid-template-columns:repeat(6,1fr); gap:.4rem; margin-top:.7rem; }
+  .trend-labels div{ font-family:var(--font-body); font-size:.8rem; color:var(--mid-grey); text-align:center; line-height:1.4; }
+
+  /* ---------- Annotation / errata box ---------- */
+  .annotation{
+    position:relative; margin:1.8rem 0 0; padding:1.3rem 1.5rem 1.3rem 1.7rem;
+    background:var(--pale-sky); border-left:3px solid var(--deep-sky); border-radius:0 10px 10px 0;
+    font-size:1rem; color:var(--ink);
+  }
+  .annotation .tag{ display:block; margin-bottom:.5rem; }
+
+  /* ---------- Quote band (brand pattern: Mid Sky background) ---------- */
+  .quote-band{
+    background:var(--mid-sky); border-radius:16px; padding:3.2rem 2.6rem;
+    margin-left:-1.5rem; margin-right:-1.5rem;
+  }
+  @media (max-width:680px){ .quote-band{ margin-left:0; margin-right:0; padding:2.2rem 1.5rem; } }
+  .quote-band .section-head{ margin-bottom:1.9rem; }
+  .quote-band .section-head h2{ color:var(--ink); }
+  .quote-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+  @media (max-width:680px){ .quote-grid{ grid-template-columns:1fr; } }
+  blockquote{
+    margin:0; padding:1.7rem 1.8rem; background:var(--white); border-radius:12px;
+  }
+  blockquote p{
+    font-family:var(--font-display); font-style:italic; font-weight:400;
+    font-size:1.26rem; line-height:1.44; color:var(--ink); margin:0 0 1rem;
+  }
+  blockquote cite{
+    font-family:var(--font-body); font-style:normal; font-size:.86rem; font-weight:600;
+    letter-spacing:.01em; color:var(--deep-sky); display:block;
+  }
+  blockquote cite a, .trend-callout a{ color:inherit; text-decoration:none; border-bottom:1px solid currentColor; opacity:.85; }
+  blockquote cite a:hover, .trend-callout a:hover{ opacity:1; }
+
+  /* ---------- Verdict / close ---------- */
+  .verdict{
+    padding-top:3.2rem; margin-top:1rem;
+  }
+  .verdict .tagline{
+    font-family:var(--font-display); font-weight:400; font-size:clamp(1.9rem,4vw,2.6rem);
+    line-height:1.28; text-wrap:balance; color:var(--ink); margin-bottom:1.7rem;
+  }
+  .verdict .tagline .mark{ background:var(--mid-sky); padding:0 .18em; border-radius:.15em; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
+  .verdict p{ font-size:1.14rem; color:var(--mid-grey); max-width:var(--measure); }
+  .verdict p b{ color:var(--ink); font-weight:700; }
+
+  /* ---------- Footer (brand pattern: Deep Sky background, white text) ---------- */
+  footer{
+    background:var(--deep-sky); color:var(--white);
+    margin-top:4rem; padding:2.4rem 1.5rem 2.6rem;
+  }
+  footer .footer-inner{ max-width:var(--wide); margin:0 auto; }
+  footer .footer-eyebrow{
+    font-family:var(--font-body); font-size:12px; font-weight:600; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--mid-sky); margin-bottom:.75rem;
+  }
+  footer p{ font-family:var(--font-body); font-size:.95rem; line-height:1.7; color:var(--white); opacity:.94; margin:0; max-width:var(--measure); }
+  footer a{ color:var(--white); opacity:.94; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a class="home-link" href="../">&larr; Alyssa&rsquo;s Substack Stories</a>
+
+  <header class="masthead">
+    <div class="eyebrow">Content analysis · Step Up Step Together</div>
+    <h1>The Bridge Codebook</h1>
+    <p class="dek">Testing a one-line value prop — <em>&ldquo;I help people bridge the gap between &lsquo;I can&rsquo;t&rsquo; and &lsquo;I can&rsquo;&rdquo;</em> — against 3.5 years of published writing, coded post by post instead of taken on faith.</p>
+    <div class="meta">
+      <span><b>87</b> posts</span>
+      <span><b>Dec 2022 – Aug 2026</b></span>
+      <span><b><a href="https://alyssafuward.substack.com" target="_blank" rel="noopener">alyssafuward.substack.com</a></b></span>
+      <span><b>coded from full article text</b></span>
+    </div>
+  </header>
+
+  <section class="hero-stat">
+    <div class="num">62<small>%</small></div>
+    <div class="cap">
+      <p>of all 87 posts contain a complete, textually-evidenced <b>&ldquo;I can&rsquo;t&rdquo; &rarr; &ldquo;I can&rdquo;</b> narrative: a named limitation, a turning point, and a demonstrated capability. Present in the very first post <em>(Dec 2022)</em> and the most recent <em>(Aug 2026)</em> — not a phase, a throughline.</p>
+      <div class="segbar">
+        <div class="seg s3" style="width:62%">62%</div>
+        <div class="seg s2" style="width:15%"></div>
+        <div class="seg s1" style="width:3%"></div>
+        <div class="seg s0" style="width:20%"></div>
+      </div>
+      <div class="segbar-legend">
+        <span><i class="swatch" style="background:var(--deep-sky)"></i>full narrative (3/3)</span>
+        <span><i class="swatch" style="background:var(--deep-sky-soft)"></i>two elements (2/3)</span>
+        <span><i class="swatch" style="background:var(--mid-grey);opacity:.5"></i>one element (1/3)</span>
+        <span><i class="swatch" style="background:var(--pale-sky);border:1px solid var(--sky-rule)"></i>no narrative (0/3)</span>
+      </div>
+      <p class="caption" style="margin-top:.9rem;font-size:.95rem;"><b style="color:var(--ink)">80% of posts show at least one element</b> of the &ldquo;I can&rsquo;t&rdquo; &rarr; &ldquo;I can&rdquo; structure.</p>
+    </div>
+  </section>
+
+  <section class="prose" style="margin-bottom:3.6rem;">
+    <div class="method-grid">
+      <div class="method-cell">
+        <span class="eyebrow tag">Topic</span>
+        <p>What the post is about — 8 fixed categories, from AI &amp; Building to Inner Life to Coaching &amp; Leadership.</p>
+      </div>
+      <div class="method-cell">
+        <span class="eyebrow tag">Identity → Practical</span>
+        <p>Where the post sits, from personal identity and reflection to a practical, hands-on application.</p>
+        <div class="dots">
+          <i style="background:var(--mid-sky)"></i><i style="background:var(--deep-sky-soft)"></i><i style="background:var(--deep-sky)"></i>
+        </div>
+      </div>
+      <div class="method-cell">
+        <span class="eyebrow tag">&ldquo;I can&rsquo;t&rdquo; &rarr; &ldquo;I can&rdquo;</span>
+        <p>Whether it contains a named limitation → turning point → demonstrated capability — scored 0–3, from the actual text, not the title.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>What she actually writes about</h2>
+      <span class="n">n = 87</span>
+    </div>
+    <div class="barlist">
+      <div class="barrow"><div class="label">AI &amp; Building</div><div class="track"><div class="fill" style="width:100%" title="28 posts, 32%"></div></div><div class="val">32% · 28</div></div>
+      <div class="barrow"><div class="label">Inner Life</div><div class="track"><div class="fill" style="width:60.7%" title="17 posts, 20%"></div></div><div class="val">20% · 17</div></div>
+      <div class="barrow"><div class="label">Writing / Meta</div><div class="track"><div class="fill" style="width:39.3%" title="11 posts, 13%"></div></div><div class="val">13% · 11</div></div>
+      <div class="barrow"><div class="label">Career &amp; Work</div><div class="track"><div class="fill" style="width:35.7%" title="10 posts, 11%"></div></div><div class="val">11% · 10</div></div>
+      <div class="barrow"><div class="label">Coaching &amp; Leadership</div><div class="track"><div class="fill" style="width:32.1%" title="9 posts, 10%"></div></div><div class="val">10% · 9</div></div>
+      <div class="barrow"><div class="label">Identity &amp; Representation</div><div class="track"><div class="fill" style="width:17.9%" title="5 posts, 6%"></div></div><div class="val">6% · 5</div></div>
+      <div class="barrow"><div class="label">Creative Practice</div><div class="track"><div class="fill" style="width:14.3%" title="4 posts, 5%"></div></div><div class="val">5% · 4</div></div>
+      <div class="barrow"><div class="label">Relationships &amp; Community</div><div class="track"><div class="fill" style="width:10.7%" title="3 posts, 3%"></div></div><div class="val">3% · 3</div></div>
+    </div>
+    <p class="caption">AI &amp; Building leads, but Inner Life, Writing/Meta, Identity and Relationships together are 42% of the archive — this reads as a newsletter about becoming, with AI as its current lens, not an AI newsletter.</p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>From identity to practical applications, by topic</h2>
+      <span class="n">mean score, 1 (identity) – 5 (practical)</span>
+    </div>
+    <div class="strip-wrap">
+      <div class="strip-endpoints">
+        <span>Identity</span>
+        <span>Practical Applications</span>
+      </div>
+      <div class="strip-track">
+        <div class="strip-cluster-band" style="left:0%; width:52.75%"></div>
+        <div class="strip-cluster-caption" style="left:0%; width:52.75%">7 topics cluster here — 1.0 to 3.1</div>
+        <div class="strip-dot" style="left:0%" title="Identity &amp; Representation — 1.00"></div>
+        <div class="strip-dot" style="left:6.75%" title="Writing / Meta — 1.27"></div>
+        <div class="strip-dot" style="left:25%" title="Creative Practice — 2.00"></div>
+        <div class="strip-dot" style="left:26.5%" title="Inner Life — 2.06"></div>
+        <div class="strip-dot" style="left:41.75%" title="Relationships &amp; Community — 2.67"></div>
+        <div class="strip-dot" style="left:45%" title="Career &amp; Work — 2.80"></div>
+        <div class="strip-dot" style="left:52.75%" title="Coaching &amp; Leadership — 3.11"></div>
+        <div class="strip-dot major" style="left:84.75%" title="AI &amp; Building — 4.39">
+          <span class="strip-callout">AI &amp; Building — <b>4.39</b></span>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Seven of eight topics sit inside a two-point band toward the identity end. AI &amp; Building stands alone out at the practical end — more than a full point past the next-highest topic, and nothing else comes close.</p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>From identity to practical applications, over time</h2>
+      <span class="n">mean score by period</span>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <span class="flow-num">2.65</span>
+        <span class="flow-label">Launch → 2025<br><small>n = 61</small></span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step peak">
+        <span class="flow-num">3.83</span>
+        <span class="flow-label">Peak · H1 2026<br><small>n = 18 · HCAIC / Open Room / vibe-coding</small></span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="flow-num">2.25</span>
+        <span class="flow-label">Now · last 8 posts<br><small>Jul–Aug 2026</small></span>
+      </div>
+    </div>
+
+    <div class="trend-callout">It climbs steadily for three years, then <b>peaks at 3.83</b> during the build-heavy stretch of early 2026, before <b>dropping back to 2.25</b> in the most recent posts — independently confirming the &ldquo;I boxed myself in&rdquo; correction named in <b>&ldquo;<a href="https://alyssafuward.substack.com/p/0-a-new-step" target="_blank" rel="noopener">#0 / a new step</a>&rdquo;</b> (Aug 11, 2026).</div>
+
+    <div class="trend-wrap">
+      <div class="eyebrow">All six periods</div>
+      <svg class="trend-svg" viewBox="0 0 600 160" preserveAspectRatio="none" role="img" aria-label="Mean score rises from 2.55 to a peak of 3.83 in early 2026, then falls to 2.25 in the most recent posts">
+        <line x1="0" y1="132" x2="600" y2="132" stroke="#D8ECF8" stroke-width="1"/>
+        <line x1="0" y1="73" x2="600" y2="73" stroke="#D8ECF8" stroke-width="1" stroke-dasharray="2,4"/>
+        <line x1="0" y1="14" x2="600" y2="14" stroke="#D8ECF8" stroke-width="1"/>
+        <polyline points="20,109.6 132,126.0 244,97.6 356,93.9 468,14 580,132"
+                  fill="none" stroke="#1F6FA8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="20" cy="109.6" r="4.5" fill="#FFFFFF" stroke="#1F6FA8" stroke-width="2"/>
+        <circle cx="132" cy="126.0" r="4.5" fill="#FFFFFF" stroke="#1F6FA8" stroke-width="2"/>
+        <circle cx="244" cy="97.6" r="4.5" fill="#FFFFFF" stroke="#1F6FA8" stroke-width="2"/>
+        <circle cx="356" cy="93.9" r="4.5" fill="#FFFFFF" stroke="#1F6FA8" stroke-width="2"/>
+        <circle cx="468" cy="14" r="6" fill="#1F6FA8" stroke="#FFFFFF" stroke-width="2"/>
+        <circle cx="580" cy="132" r="4.5" fill="#FFFFFF" stroke="#1F6FA8" stroke-width="2"/>
+        <text x="468" y="4" text-anchor="middle" font-family="DM Sans" font-weight="700" font-size="13" fill="#1F6FA8">3.83</text>
+        <text x="580" y="149" text-anchor="middle" font-family="DM Sans" font-weight="700" font-size="13" fill="#666666">2.25</text>
+      </svg>
+      <div class="trend-labels">
+        <div>Dec &rsquo;22–<br>May &rsquo;23<br>n=20</div>
+        <div>Late &rsquo;23–<br>2024<br>n=3</div>
+        <div>Jan–Jun<br>&rsquo;25<br>n=21</div>
+        <div>Jul–Dec &rsquo;25<br>(AI pivot)<br>n=17</div>
+        <div>Jan–Jun &rsquo;26<br>(peak build)<br>n=18</div>
+        <div>Jul–Aug &rsquo;26<br>(restructure)<br>n=8</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>The journey from &ldquo;I can&rsquo;t&rdquo; to &ldquo;I can&rdquo; — present across topics</h2>
+      <span class="n">posts with the full narrative &nbsp;&middot;&nbsp; <span style="opacity:.75">(mean score, 0–3)</span></span>
+    </div>
+    <div class="barlist">
+      <div class="barrow"><div class="label">Creative Practice</div><div class="track"><div class="fill" style="width:100%" title="4 of 4 posts hit the full narrative, mean 3.00"></div></div><div class="val">4/4 <small>(3.00)</small></div></div>
+      <div class="barrow"><div class="label">Career &amp; Work</div><div class="track"><div class="fill" style="width:86.7%" title="8 of 10 posts hit the full narrative, mean 2.60"></div></div><div class="val">8/10 <small>(2.60)</small></div></div>
+      <div class="barrow"><div class="label">Inner Life</div><div class="track"><div class="fill" style="width:84.3%" title="13 of 17 posts hit the full narrative, mean 2.53"></div></div><div class="val">13/17 <small>(2.53)</small></div></div>
+      <div class="barrow"><div class="label">AI &amp; Building <small>corrected, see note</small></div><div class="track"><div class="fill" style="width:71.3%" title="18 of 28 posts hit the full narrative, mean 2.14"></div></div><div class="val">18/28 <small>(2.14)</small></div></div>
+      <div class="barrow"><div class="label">Writing / Meta</div><div class="track"><div class="fill" style="width:69.7%" title="5 of 11 posts hit the full narrative, mean 2.09"></div></div><div class="val">5/11 <small>(2.09)</small></div></div>
+      <div class="barrow"><div class="label">Relationships &amp; Community</div><div class="track"><div class="fill" style="width:66.7%" title="2 of 3 posts hit the full narrative, mean 2.00"></div></div><div class="val">2/3 <small>(2.00)</small></div></div>
+      <div class="barrow"><div class="label">Identity &amp; Representation</div><div class="track"><div class="fill" style="width:66.7%" title="2 of 5 posts hit the full narrative, mean 2.00"></div></div><div class="val">2/5 <small>(2.00)</small></div></div>
+      <div class="barrow"><div class="label">Coaching &amp; Leadership</div><div class="track"><div class="fill dim" style="width:40.7%" title="2 of 9 posts hit the full narrative, mean 1.22"></div></div><div class="val">2/9 <small>(1.22)</small></div></div>
+    </div>
+
+    <p class="caption">It shows up in every one of the 8 topics — nowhere does it disappear. Strongest in Creative Practice and Career &amp; Work; even at its weakest, in generic Coaching &amp; Leadership tips, it&rsquo;s still present in a meaningful share of posts. That breadth — not any one topic — is the real evidence for the tagline.</p>
+
+    <div class="annotation">
+      <span class="eyebrow tag">Correction made during coding</span>
+      A first pass scored AI &amp; Building lowest of all (1.4), only crediting posts where <em>Alyssa</em> narrated her own doubt in the text. That missed how a lot of this writing actually works: the limitation belongs to the <b>reader</b> — &ldquo;I don&rsquo;t think I can code&rdquo; — and a shipped build or a 7&#8209;year&#8209;old&rsquo;s working app stands in as the proof, not a confession. Rescored with that rule, AI &amp; Building rose to 2.14, in line with the rest of the archive.
+    </div>
+  </section>
+
+  <section class="quote-band">
+    <div class="section-head"><h2>In her own words</h2></div>
+    <div class="quote-grid">
+      <blockquote>
+        <p>&ldquo;I&rsquo;m strong. I can do this. I can&rsquo;t do this. I can do this.&rdquo;</p>
+        <cite><a href="https://alyssafuward.substack.com/p/new-biceps-new-brain-muscles-what" target="_blank" rel="noopener">New biceps, new brain muscles</a> · Oct 22, 2025</cite>
+      </blockquote>
+      <blockquote>
+        <p>&ldquo;My 7 year old daughter hadn&rsquo;t been told she can&rsquo;t do it. So she did. If she can do it, you can too.&rdquo;</p>
+        <cite><a href="https://alyssafuward.substack.com/p/if-my-7-year-old-can-vibe-code-an" target="_blank" rel="noopener">If my 7 year old can vibe code an app, so can you</a> · Mar 25, 2026</cite>
+      </blockquote>
+      <blockquote>
+        <p>&ldquo;Behavior change that&rsquo;s an extension of who you already are. You just didn&rsquo;t know how to do it.&rdquo;</p>
+        <cite><a href="https://alyssafuward.substack.com/p/0-a-new-step" target="_blank" rel="noopener">#0 / a new step</a> · Aug 11, 2026</cite>
+      </blockquote>
+      <blockquote>
+        <p>&ldquo;You don&rsquo;t need more prompting classes. You don&rsquo;t need to learn how to code&hellip; You are enough.&rdquo;</p>
+        <cite><a href="https://alyssafuward.substack.com/p/say-the-obvious-part-out-loud" target="_blank" rel="noopener">Say the obvious part out loud</a> · Mar 11, 2026</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="verdict">
+    <div class="tagline">&ldquo;I help people bridge the gap between <span class="mark">&lsquo;I can&rsquo;t&rsquo;</span> and <span class="mark">&lsquo;I can&rsquo;</span>&rdquo;</div>
+    <p><b>This isn&rsquo;t just a nice line — it&rsquo;s a measurable, dominant structure across 3.5 years and nearly every topic.</b> 62% of all 87 posts contain a complete, textually-evidenced &ldquo;I can&rsquo;t&rdquo; &rarr; &ldquo;I can&rdquo; narrative; it opens the archive in December 2022 and closes it in August 2026; and it appears in some measure across every single topic she writes in.</p>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-eyebrow">Method</div>
+    <p>Coded from full article text (not titles) against a 3-part scheme: Topic (8 fixed categories), a 1–5 scale from identity to practical application, and the &ldquo;I can&rsquo;t&rdquo; &rarr; &ldquo;I can&rdquo; narrative (named limitation + turning point + demonstrated capability, scored 0–3). Revised once mid-analysis: a limitation may belong to the implied reader rather than be self-narrated, and a working artifact counts as demonstrated capability. n = 87 published posts, <a href="https://alyssafuward.substack.com" target="_blank" rel="noopener">alyssafuward.substack.com</a>, Dec 2022–Aug 2026.</p>
+  </div>
+</footer>
+</body>
+</html>
